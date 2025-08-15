@@ -1,30 +1,44 @@
-# Food Tracker
+# Food App
 
-A cross-platform food tracker built with Flutter. It uses local storage to keep track of products, meals and logged entries.
+A starter Flutter project providing the basic UI structure and navigation for the **Food App**.
 
-## Features
+## Prerequisites
+- [Flutter SDK 3.x](https://docs.flutter.dev/get-started/install)
+- Android Studio with Android SDK or Xcode
+- Java Development Kit (JDK 11 or later)
 
-- Manage products with nutritional info
-- Create meals from products
-- Log what you eat
-- View goals and simple statistics
-- Bottom navigation to switch between sections
-
-This project contains only a minimal scaffold and is intended as a starting point for development.
-
-## Install on Android
-
-You can build an APK and install it on an Android device:
-
-1. [Install Flutter](https://docs.flutter.dev/get-started/install) and the Android SDK.
-2. Generate the platform folders (only needed the first time):
+## Getting Started
+1. Clone the repository and open it in your IDE:
    ```bash
-   flutter create .
+   git clone <repo-url>
+   cd food_app
    ```
-3. Fetch dependencies and build the release APK:
+2. Fetch the dependencies:
    ```bash
    flutter pub get
-   flutter build apk --release
    ```
-4. The APK will be located at `build/app/outputs/flutter-apk/app-release.apk`. Transfer it to your device and install it manually or via `adb install`.
-5. Alternatively, download a pre-built APK from the **Android Build** workflow artifacts available on GitHub.
+3. Run the app on an emulator or physical device:
+   ```bash
+   flutter run
+   ```
+
+## Project Structure
+```plaintext
+lib/
+├── app.dart
+├── main.dart
+├── routing/
+│   └── app_router.dart
+├── widgets/
+│   └── app_scaffold.dart
+└── features/
+    ├── logs/ui/logs_screen.dart
+    ├── meals/ui/meals_screen.dart
+    ├── products/ui/products_screen.dart
+    ├── statistics/ui/statistics_screen.dart
+    └── settings/ui/settings_screen.dart
+```
+
+## Notes
+- The current build focuses solely on UI and navigation.
+- Features such as data import/export, QR scanning, and other business logic are **not** implemented in this phase.
