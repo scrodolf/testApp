@@ -1,30 +1,28 @@
-# Food Tracker
+# Food App
 
-A cross-platform food tracker built with Flutter. It uses local storage to keep track of products, meals and logged entries.
+A foundational Flutter project showcasing the basic UI layout for a future food tracking application. It features a bottom navigation bar with placeholder screens for Logs, Meals, Products, Statistics, and Settings.
 
-## Features
+## Prerequisites
+- Flutter SDK (version 3.x)
+- Android Studio or another Flutter-friendly IDE
+- Android SDK and platform tools
+- Java Development Kit (JDK)
 
-- Manage products with nutritional info
-- Create meals from products
-- Log what you eat
-- View goals and simple statistics
-- Bottom navigation to switch between sections
-
-This project contains only a minimal scaffold and is intended as a starting point for development.
-
-## Install on Android
-
-You can build an APK and install it on an Android device:
-
-1. [Install Flutter](https://docs.flutter.dev/get-started/install) and the Android SDK.
-2. Generate the platform folders (only needed the first time):
+## Getting Started
+1. **Clone the repository**
    ```bash
-   flutter create .
+   git clone <repository-url>
+   cd testApp
    ```
-3. Fetch dependencies and build the release APK:
+2. **Install dependencies**
    ```bash
    flutter pub get
-   flutter build apk --release
    ```
-4. The APK will be located at `build/app/outputs/flutter-apk/app-release.apk`. Transfer it to your device and install it manually or via `adb install`.
-5. Alternatively, download a pre-built APK from the **Android Build** workflow artifacts available on GitHub.
+3. **Run the app** on an emulator or connected device
+   ```bash
+   flutter run
+   ```
+
+## Notes
+- The app currently focuses solely on UI and navigation.
+- Functionality such as data export/import or QR code scanning is stubbed and not implemented in this phase.
