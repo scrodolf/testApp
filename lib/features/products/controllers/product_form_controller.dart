@@ -14,6 +14,7 @@ class ProductFormController extends AutoDisposeAsyncNotifier<void> {
     required int defaultServingUnitId,
     required List<CategoryValueInput> categoryValues,
     required List<UnitOverrideInput> unitOverrides,
+=======
   }) async {
     state = const AsyncLoading();
     final repo = await ref.watch(productRepositoryProvider.future);
@@ -50,6 +51,7 @@ class ProductFormController extends AutoDisposeAsyncNotifier<void> {
         defaultServingUnitId: defaultServingUnitId,
         categoryValues: categoryValues,
         unitOverrides: unitOverrides,
+=======
       );
       state = const AsyncData(null);
     } catch (e, st) {

@@ -19,6 +19,11 @@ import 'package:food_app/domain/repositories/i_meal_log_repository.dart';
 import 'package:food_app/domain/repositories/i_meal_type_repository.dart';
 import 'package:food_app/utils/date_time_utils.dart';
 import 'package:food_app/features/meals/services/meal_calculation_service.dart';
+=======
+import 'package:food_app/data/database/app_database.dart';
+import 'package:food_app/data/repositories/product_repository_impl.dart';
+import 'package:food_app/domain/repositories/i_product_repository.dart';
+import 'package:food_app/utils/date_time_utils.dart';
 
 /// Provides a lazily opened [AppDatabase] instance.
 final appDatabaseProvider = FutureProvider<AppDatabase>((ref) async {
@@ -144,6 +149,7 @@ final mealCalculationServiceProvider =
   return MealCalculationService(conversion, units);
 });
 
+=======
 /// Stream provider emitting all products with their details.
 final allProductsProvider =
     StreamProvider<List<ProductWithDetails>>((ref) async* {
@@ -158,6 +164,7 @@ final productDetailsProvider =
   yield* repo.watchProductById(productId);
 });
 
+=======
 /// Provider for the unit registry service.
 final unitRegistryProvider = FutureProvider<IUnitRegistry>((ref) async {
   final db = await ref.watch(appDatabaseProvider.future);

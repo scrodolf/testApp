@@ -20,6 +20,8 @@ part 'app_database.g.dart';
   MealTypes,
   LogItems
 ])
+=======
+@DriftDatabase(tables: [Units, Products, Categories, ProductCategoryValues])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -187,3 +189,4 @@ class MealTypes extends Table {
   /// Human readable meal type name.
   TextColumn get name => text()();
 }
+

@@ -25,6 +25,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
   final List<TextEditingController> _overrideCtrls = [];
   final List<int?> _overrideUnitIds = [];
 
+=======
   @override
   void dispose() {
     _nameCtrl.dispose();
@@ -35,6 +36,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
     for (final c in _overrideCtrls) {
       c.dispose();
     }
+=======
     super.dispose();
   }
 
@@ -179,6 +181,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                     ),
                   ),
                   const SizedBox(height: 24),
+=======
                   ElevatedButton(
                     onPressed: formState.isLoading
                         ? null
@@ -211,6 +214,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                                   unitId: unitId, factorToBase: factor));
                             }
 
+=======
                             await ref
                                 .read(productFormControllerProvider.notifier)
                                 .saveProduct(
@@ -220,6 +224,7 @@ class _AddProductFormState extends ConsumerState<AddProductForm> {
                                   defaultServingUnitId: _selectedServingUnitId!,
                                   categoryValues: categoryInputs,
                                   unitOverrides: overrides,
+=======
                                 );
                             final state =
                                 ref.read(productFormControllerProvider);

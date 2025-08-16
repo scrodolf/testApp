@@ -69,3 +69,4 @@ class MealPersistenceException extends AppException {
   MealPersistenceException(String message, [Object? cause])
       : super(message, cause);
 }
+=======

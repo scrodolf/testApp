@@ -18,6 +18,7 @@ class UnitOverrideInput {
   final double factorToBase;
 }
 
+=======
 /// Abstraction for product persistence and retrieval.
 abstract class IProductRepository {
   /// Watches all products and emits updates whenever data changes.
@@ -36,6 +37,7 @@ abstract class IProductRepository {
     required int defaultServingUnitId,
     required List<CategoryValueInput> categoryValues,
     required List<UnitOverrideInput> unitOverrides,
+=======
   });
 
   /// Updates an existing product. Returns `true` if any row was affected.
@@ -46,6 +48,7 @@ abstract class IProductRepository {
     required int defaultServingUnitId,
     required List<CategoryValueInput> categoryValues,
     required List<UnitOverrideInput> unitOverrides,
+=======
   });
 
   /// Deletes a product by [id].

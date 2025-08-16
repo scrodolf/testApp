@@ -5,4 +5,6 @@ abstract class IConversionService {
   /// Implementations may look up conversion ratios from persistent storage.
   Future<double> convert(double value, int sourceUnitId, int targetUnitId,
       {Map<int, double>? customUnitFactors});
+=======
+  Future<double> convert(double value, int sourceUnitId, int targetUnitId);
 }

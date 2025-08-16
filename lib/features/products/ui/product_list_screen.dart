@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:food_app/data/providers.dart';
 import 'package:food_app/domain/repositories/i_product_repository.dart';
+=======
 
 /// Displays all products stored in the database.
 class ProductListScreen extends ConsumerWidget {
@@ -107,6 +108,11 @@ class ProductListScreen extends ConsumerWidget {
                       '${p.product.defaultServingSize} ${p.defaultUnit.name}'),
                   onTap: () => context.push('/products/${p.product.id}'),
                 ),
+=======
+              return ListTile(
+                title: Text(p.product.name),
+                subtitle: Text(
+                    '${p.product.defaultServingSize} ${p.defaultUnit.name}'),
               );
             },
           );

@@ -96,6 +96,7 @@ class UnitRegistryImpl implements IUnitRegistry {
 
   /// Adds a custom unit to the registry.
   @override
+=======
   Future<int> addUnit(UnitsCompanion unit) async {
     try {
       return await _db.into(_db.units).insert(unit);
@@ -106,6 +107,7 @@ class UnitRegistryImpl implements IUnitRegistry {
 
   /// Deletes a unit by [id].
   @override
+=======
   Future<void> deleteUnit(int id) async {
     try {
       final deleted =

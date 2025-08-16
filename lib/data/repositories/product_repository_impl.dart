@@ -27,12 +27,14 @@ class ProductRepositoryImpl implements IProductRepository {
       _dao.watchProductById(id);
 
   @override
+=======
   Future<int> insertProduct({
     required String name,
     required double defaultServingSize,
     required int defaultServingUnitId,
     required List<CategoryValueInput> categoryValues,
     required List<UnitOverrideInput> unitOverrides,
+=======
   }) async {
     try {
       final product = ProductsCompanion(
@@ -45,6 +47,7 @@ class ProductRepositoryImpl implements IProductRepository {
         for (final o in unitOverrides) o.unitId: o.factorToBase
       };
 
+=======
       final convertedValues = <ProductCategoryValuesCompanion>[];
       for (final cv in categoryValues) {
         final category = await _dao.getCategoryById(cv.categoryId);
@@ -61,6 +64,9 @@ class ProductRepositoryImpl implements IProductRepository {
           baseUnit.id,
           customUnitFactors: overrideMap,
         );
+=======
+        final converted =
+            await _conversion.convert(cv.value, cv.unitId, baseUnit.id);
         convertedValues.add(ProductCategoryValuesCompanion(
           categoryId: Value(cv.categoryId),
           value: Value(converted),
@@ -76,6 +82,8 @@ class ProductRepositoryImpl implements IProductRepository {
           .toList();
 
       return _dao.insertProduct(product, convertedValues, overrideCompanions);
+=======
+      return _dao.insertProduct(product, convertedValues);
     } on AppException {
       rethrow;
     } catch (e) {
@@ -91,6 +99,7 @@ class ProductRepositoryImpl implements IProductRepository {
     required int defaultServingUnitId,
     required List<CategoryValueInput> categoryValues,
     required List<UnitOverrideInput> unitOverrides,
+=======
   }) async {
     try {
       final product = ProductsCompanion(
@@ -104,6 +113,7 @@ class ProductRepositoryImpl implements IProductRepository {
         for (final o in unitOverrides) o.unitId: o.factorToBase
       };
 
+=======
       final convertedValues = <ProductCategoryValuesCompanion>[];
       for (final cv in categoryValues) {
         final category = await _dao.getCategoryById(cv.categoryId);
@@ -120,6 +130,9 @@ class ProductRepositoryImpl implements IProductRepository {
           baseUnit.id,
           customUnitFactors: overrideMap,
         );
+=======
+        final converted =
+            await _conversion.convert(cv.value, cv.unitId, baseUnit.id);
         convertedValues.add(ProductCategoryValuesCompanion(
           categoryId: Value(cv.categoryId),
           value: Value(converted),
@@ -135,6 +148,8 @@ class ProductRepositoryImpl implements IProductRepository {
           .toList();
 
       return _dao.updateProduct(product, convertedValues, overrideCompanions);
+=======
+      return _dao.updateProduct(product, convertedValues);
     } on AppException {
       rethrow;
     } catch (e) {

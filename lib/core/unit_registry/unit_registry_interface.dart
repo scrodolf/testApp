@@ -23,4 +23,5 @@ abstract class IUnitRegistry {
 
   /// Removes a unit by its [id].
   Future<void> deleteUnit(int id);
+=======
 }

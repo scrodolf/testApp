@@ -28,6 +28,11 @@ class ProductWithDetails {
     required this.values,
     required this.unitOverrides,
   });
+=======
+/// Aggregates a [Product] with its default serving unit and all category values.
+class ProductWithDetails {
+  ProductWithDetails(
+      {required this.product, required this.defaultUnit, required this.values});
 
   final Product product;
   final Unit defaultUnit;
@@ -35,6 +40,7 @@ class ProductWithDetails {
 
   /// Product-specific unit overrides such as "1 scoop = 30 g".
   final List<UnitOverrideDetail> unitOverrides;
+=======
 }
 
 /// Data access object responsible for CRUD operations on products and related
@@ -136,6 +142,9 @@ class ProductDao {
         values: details,
         unitOverrides: overrides,
       ));
+=======
+      results.add(ProductWithDetails(
+          product: product, defaultUnit: unit, values: details));
     }
     return results;
   }
@@ -206,6 +215,14 @@ class ProductDao {
       ProductsCompanion product,
       List<ProductCategoryValuesCompanion> categoryValues,
       List<ProductUnitOverridesCompanion> overrides) async {
+=======
+    return ProductWithDetails(
+        product: product, defaultUnit: unit, values: details);
+  }
+
+  /// Inserts a product and associated category values within a transaction.
+  Future<int> insertProduct(ProductsCompanion product,
+      List<ProductCategoryValuesCompanion> categoryValues) async {
     return _db.transaction(() async {
       final productId = await _db.into(_db.products).insert(product);
       for (final value in categoryValues) {
@@ -218,6 +235,7 @@ class ProductDao {
             .into(_db.productUnitOverrides)
             .insert(override.copyWith(productId: Value(productId)));
       }
+=======
       return productId;
     });
   }
@@ -227,6 +245,9 @@ class ProductDao {
       ProductsCompanion product,
       List<ProductCategoryValuesCompanion> categoryValues,
       List<ProductUnitOverridesCompanion> overrides) async {
+=======
+  Future<bool> updateProduct(ProductsCompanion product,
+      List<ProductCategoryValuesCompanion> categoryValues) async {
     return _db.transaction(() async {
       final updated = await (_db.update(_db.products)
             ..where((tbl) => tbl.id.equals(product.id.value)))
@@ -237,6 +258,7 @@ class ProductDao {
       await (_db.delete(_db.productUnitOverrides)
             ..where((tbl) => tbl.productId.equals(product.id.value)))
           .go();
+=======
       for (final value in categoryValues) {
         await _db
             .into(_db.productCategoryValues)
@@ -247,6 +269,7 @@ class ProductDao {
             .into(_db.productUnitOverrides)
             .insert(override.copyWith(productId: Value(product.id.value)));
       }
+=======
       return updated > 0;
     });
   }
@@ -260,6 +283,7 @@ class ProductDao {
       await (_db.delete(_db.productUnitOverrides)
             ..where((tbl) => tbl.productId.equals(id)))
           .go();
+=======
       await (_db.delete(_db.products)..where((tbl) => tbl.id.equals(id))).go();
     });
   }
