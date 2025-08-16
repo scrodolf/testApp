@@ -150,6 +150,7 @@ class ProductDao {
     return _db.select(_db.products).watch().asyncMap((_) => getProductById(id));
   }
 
+=======
   /// Inserts a product and associated category values within a transaction.
   Future<int> insertProduct(ProductsCompanion product,
       List<ProductCategoryValuesCompanion> categoryValues) async {

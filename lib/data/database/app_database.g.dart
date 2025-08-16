@@ -362,6 +362,11 @@ class $ProductsTable extends Products with TableInfo<$ProductsTable, Product> {
   @override
   List<GeneratedColumn> get $columns =>
       [id, name, defaultServingSize, defaultServingUnitId, customUnitRatios];
+=======
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, name, defaultServingSize, defaultServingUnitId];
+
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -398,6 +403,8 @@ class $ProductsTable extends Products with TableInfo<$ProductsTable, Product> {
       context.missing(_defaultServingUnitIdMeta);
     }
     context.handle(_customUnitRatiosMeta, const VerificationResult.success());
+=======
+
     return context;
   }
 
@@ -418,6 +425,7 @@ class $ProductsTable extends Products with TableInfo<$ProductsTable, Product> {
       customUnitRatios: $ProductsTable.$convertercustomUnitRatios.fromSql(
           attachedDatabase.typeMapping.read(DriftSqlType.string,
               data['${effectivePrefix}custom_unit_ratios'])!),
+
     );
   }
 
@@ -428,6 +436,7 @@ class $ProductsTable extends Products with TableInfo<$ProductsTable, Product> {
 
   static TypeConverter<Map<int, double>, String> $convertercustomUnitRatios =
       const IntDoubleMapConverter();
+
 }
 
 class Product extends DataClass implements Insertable<Product> {
@@ -447,12 +456,16 @@ class Product extends DataClass implements Insertable<Product> {
   /// Stored as a JSON map of `unitId -> factorToBase` allowing the same unit
   /// to have different ratios depending on the product.
   final Map<int, double> customUnitRatios;
+
   const Product(
       {required this.id,
       required this.name,
       required this.defaultServingSize,
       required this.defaultServingUnitId,
       required this.customUnitRatios});
+=======
+      required this.defaultServingUnitId});
+
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -464,6 +477,7 @@ class Product extends DataClass implements Insertable<Product> {
       map['custom_unit_ratios'] = Variable<String>(
           $ProductsTable.$convertercustomUnitRatios.toSql(customUnitRatios));
     }
+
     return map;
   }
 
@@ -474,6 +488,7 @@ class Product extends DataClass implements Insertable<Product> {
       defaultServingSize: Value(defaultServingSize),
       defaultServingUnitId: Value(defaultServingUnitId),
       customUnitRatios: Value(customUnitRatios),
+
     );
   }
 
@@ -489,6 +504,7 @@ class Product extends DataClass implements Insertable<Product> {
           serializer.fromJson<int>(json['defaultServingUnitId']),
       customUnitRatios:
           serializer.fromJson<Map<int, double>>(json['customUnitRatios']),
+
     );
   }
   @override
@@ -500,6 +516,7 @@ class Product extends DataClass implements Insertable<Product> {
       'defaultServingSize': serializer.toJson<double>(defaultServingSize),
       'defaultServingUnitId': serializer.toJson<int>(defaultServingUnitId),
       'customUnitRatios': serializer.toJson<Map<int, double>>(customUnitRatios),
+
     };
   }
 
@@ -509,12 +526,16 @@ class Product extends DataClass implements Insertable<Product> {
           double? defaultServingSize,
           int? defaultServingUnitId,
           Map<int, double>? customUnitRatios}) =>
+=======
+          int? defaultServingUnitId}) =>
+
       Product(
         id: id ?? this.id,
         name: name ?? this.name,
         defaultServingSize: defaultServingSize ?? this.defaultServingSize,
         defaultServingUnitId: defaultServingUnitId ?? this.defaultServingUnitId,
         customUnitRatios: customUnitRatios ?? this.customUnitRatios,
+
       );
   Product copyWithCompanion(ProductsCompanion data) {
     return Product(
@@ -529,6 +550,7 @@ class Product extends DataClass implements Insertable<Product> {
       customUnitRatios: data.customUnitRatios.present
           ? data.customUnitRatios.value
           : this.customUnitRatios,
+
     );
   }
 
@@ -540,6 +562,9 @@ class Product extends DataClass implements Insertable<Product> {
           ..write('defaultServingSize: $defaultServingSize, ')
           ..write('defaultServingUnitId: $defaultServingUnitId, ')
           ..write('customUnitRatios: $customUnitRatios')
+=======
+          ..write('defaultServingUnitId: $defaultServingUnitId')
+
           ..write(')'))
         .toString();
   }
@@ -547,6 +572,9 @@ class Product extends DataClass implements Insertable<Product> {
   @override
   int get hashCode => Object.hash(
       id, name, defaultServingSize, defaultServingUnitId, customUnitRatios);
+=======
+  int get hashCode =>
+      Object.hash(id, name, defaultServingSize, defaultServingUnitId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -556,6 +584,8 @@ class Product extends DataClass implements Insertable<Product> {
           other.defaultServingSize == this.defaultServingSize &&
           other.defaultServingUnitId == this.defaultServingUnitId &&
           other.customUnitRatios == this.customUnitRatios);
+=======
+          other.defaultServingUnitId == this.defaultServingUnitId);
 }
 
 class ProductsCompanion extends UpdateCompanion<Product> {
@@ -564,12 +594,14 @@ class ProductsCompanion extends UpdateCompanion<Product> {
   final Value<double> defaultServingSize;
   final Value<int> defaultServingUnitId;
   final Value<Map<int, double>> customUnitRatios;
+
   const ProductsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.defaultServingSize = const Value.absent(),
     this.defaultServingUnitId = const Value.absent(),
     this.customUnitRatios = const Value.absent(),
+
   });
   ProductsCompanion.insert({
     this.id = const Value.absent(),
@@ -577,6 +609,7 @@ class ProductsCompanion extends UpdateCompanion<Product> {
     required double defaultServingSize,
     required int defaultServingUnitId,
     this.customUnitRatios = const Value.absent(),
+
   })  : name = Value(name),
         defaultServingSize = Value(defaultServingSize),
         defaultServingUnitId = Value(defaultServingUnitId);
@@ -586,6 +619,7 @@ class ProductsCompanion extends UpdateCompanion<Product> {
     Expression<double>? defaultServingSize,
     Expression<int>? defaultServingUnitId,
     Expression<String>? customUnitRatios,
+
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -595,6 +629,7 @@ class ProductsCompanion extends UpdateCompanion<Product> {
       if (defaultServingUnitId != null)
         'default_serving_unit_id': defaultServingUnitId,
       if (customUnitRatios != null) 'custom_unit_ratios': customUnitRatios,
+
     });
   }
 
@@ -604,12 +639,15 @@ class ProductsCompanion extends UpdateCompanion<Product> {
       Value<double>? defaultServingSize,
       Value<int>? defaultServingUnitId,
       Value<Map<int, double>>? customUnitRatios}) {
+=======
+      Value<int>? defaultServingUnitId}) {
     return ProductsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       defaultServingSize: defaultServingSize ?? this.defaultServingSize,
       defaultServingUnitId: defaultServingUnitId ?? this.defaultServingUnitId,
       customUnitRatios: customUnitRatios ?? this.customUnitRatios,
+
     );
   }
 
@@ -629,11 +667,13 @@ class ProductsCompanion extends UpdateCompanion<Product> {
       map['default_serving_unit_id'] =
           Variable<int>(defaultServingUnitId.value);
     }
+
     if (customUnitRatios.present) {
       map['custom_unit_ratios'] = Variable<String>($ProductsTable
           .$convertercustomUnitRatios
           .toSql(customUnitRatios.value));
     }
+
     return map;
   }
 
@@ -645,6 +685,8 @@ class ProductsCompanion extends UpdateCompanion<Product> {
           ..write('defaultServingSize: $defaultServingSize, ')
           ..write('defaultServingUnitId: $defaultServingUnitId, ')
           ..write('customUnitRatios: $customUnitRatios')
+=======
+          ..write('defaultServingUnitId: $defaultServingUnitId')
           ..write(')'))
         .toString();
   }
@@ -3921,6 +3963,188 @@ class $$ProductCategoryValuesTableFilterComposer
 class $$ProductCategoryValuesTableOrderingComposer
     extends Composer<_$AppDatabase, $ProductCategoryValuesTable> {
   $$ProductCategoryValuesTableOrderingComposer({
+=======
+abstract class _$AppDatabase extends GeneratedDatabase {
+  _$AppDatabase(QueryExecutor e) : super(e);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
+  late final $UnitsTable units = $UnitsTable(this);
+  late final $ProductsTable products = $ProductsTable(this);
+  late final $CategoriesTable categories = $CategoriesTable(this);
+  late final $ProductCategoryValuesTable productCategoryValues =
+      $ProductCategoryValuesTable(this);
+  @override
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+  @override
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [units, products, categories, productCategoryValues];
+}
+
+typedef $$UnitsTableCreateCompanionBuilder = UnitsCompanion Function({
+  Value<int> id,
+  required String name,
+  required String dimension,
+  required double factorToBase,
+  Value<bool> isCustom,
+});
+typedef $$UnitsTableUpdateCompanionBuilder = UnitsCompanion Function({
+  Value<int> id,
+  Value<String> name,
+  Value<String> dimension,
+  Value<double> factorToBase,
+  Value<bool> isCustom,
+});
+
+final class $$UnitsTableReferences
+    extends BaseReferences<_$AppDatabase, $UnitsTable, Unit> {
+  $$UnitsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$ProductsTable, List<Product>> _productsRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.products,
+          aliasName: $_aliasNameGenerator(
+              db.units.id, db.products.defaultServingUnitId));
+
+  $$ProductsTableProcessedTableManager get productsRefs {
+    final manager = $$ProductsTableTableManager($_db, $_db.products)
+        .filter((f) => f.defaultServingUnitId.id($_item.id));
+
+    final cache = $_typedResult.readTableOrNull(_productsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$CategoriesTable, List<Category>>
+      _categoriesRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.categories,
+              aliasName: $_aliasNameGenerator(
+                  db.units.id, db.categories.defaultDisplayUnitId));
+
+  $$CategoriesTableProcessedTableManager get categoriesRefs {
+    final manager = $$CategoriesTableTableManager($_db, $_db.categories)
+        .filter((f) => f.defaultDisplayUnitId.id($_item.id));
+
+    final cache = $_typedResult.readTableOrNull(_categoriesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$ProductCategoryValuesTable,
+      List<ProductCategoryValue>> _productCategoryValuesRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.productCategoryValues,
+          aliasName: $_aliasNameGenerator(
+              db.units.id, db.productCategoryValues.unitId));
+
+  $$ProductCategoryValuesTableProcessedTableManager
+      get productCategoryValuesRefs {
+    final manager = $$ProductCategoryValuesTableTableManager(
+            $_db, $_db.productCategoryValues)
+        .filter((f) => f.unitId.id($_item.id));
+
+    final cache =
+        $_typedResult.readTableOrNull(_productCategoryValuesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$UnitsTableFilterComposer extends Composer<_$AppDatabase, $UnitsTable> {
+  $$UnitsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get dimension => $composableBuilder(
+      column: $table.dimension, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get factorToBase => $composableBuilder(
+      column: $table.factorToBase, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isCustom => $composableBuilder(
+      column: $table.isCustom, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> productsRefs(
+      Expression<bool> Function($$ProductsTableFilterComposer f) f) {
+    final $$ProductsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.products,
+        getReferencedColumn: (t) => t.defaultServingUnitId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$ProductsTableFilterComposer(
+              $db: $db,
+              $table: $db.products,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> categoriesRefs(
+      Expression<bool> Function($$CategoriesTableFilterComposer f) f) {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.defaultDisplayUnitId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CategoriesTableFilterComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> productCategoryValuesRefs(
+      Expression<bool> Function($$ProductCategoryValuesTableFilterComposer f)
+          f) {
+    final $$ProductCategoryValuesTableFilterComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.productCategoryValues,
+            getReferencedColumn: (t) => t.unitId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$ProductCategoryValuesTableFilterComposer(
+                  $db: $db,
+                  $table: $db.productCategoryValues,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
+}
+
+class $$UnitsTableOrderingComposer
+    extends Composer<_$AppDatabase, $UnitsTable> {
+  $$UnitsTableOrderingComposer({
+
+    
+    
+    
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -3930,6 +4154,8 @@ class $$ProductCategoryValuesTableOrderingComposer
   ColumnOrderings<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
+
+  
   ColumnOrderings<double> get value => $composableBuilder(
       column: $table.value, builder: (column) => ColumnOrderings(column));
 
@@ -3997,6 +4223,25 @@ class $$ProductCategoryValuesTableOrderingComposer
 class $$ProductCategoryValuesTableAnnotationComposer
     extends Composer<_$AppDatabase, $ProductCategoryValuesTable> {
   $$ProductCategoryValuesTableAnnotationComposer({
+=======
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get dimension => $composableBuilder(
+      column: $table.dimension, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get factorToBase => $composableBuilder(
+      column: $table.factorToBase,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isCustom => $composableBuilder(
+      column: $table.isCustom, builder: (column) => ColumnOrderings(column));
+}
+
+class $$UnitsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UnitsTable> {
+  $$UnitsTableAnnotationComposer({
+ 
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4006,6 +4251,8 @@ class $$ProductCategoryValuesTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
+
+      
   GeneratedColumn<double> get value =>
       $composableBuilder(column: $table.value, builder: (column) => column);
 
@@ -4015,6 +4262,27 @@ class $$ProductCategoryValuesTableAnnotationComposer
         getCurrentColumn: (t) => t.productId,
         referencedTable: $db.products,
         getReferencedColumn: (t) => t.id,
+=======
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get dimension =>
+      $composableBuilder(column: $table.dimension, builder: (column) => column);
+
+  GeneratedColumn<double> get factorToBase => $composableBuilder(
+      column: $table.factorToBase, builder: (column) => column);
+
+  GeneratedColumn<bool> get isCustom =>
+      $composableBuilder(column: $table.isCustom, builder: (column) => column);
+
+  Expression<T> productsRefs<T extends Object>(
+      Expression<T> Function($$ProductsTableAnnotationComposer a) f) {
+    final $$ProductsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.products,
+        getReferencedColumn: (t) => t.defaultServingUnitId,
+ 
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
@@ -4026,6 +4294,8 @@ class $$ProductCategoryValuesTableAnnotationComposer
               $removeJoinBuilderFromRootComposer:
                   $removeJoinBuilderFromRootComposer,
             ));
+
+    
     return composer;
   }
 
@@ -4035,6 +4305,19 @@ class $$ProductCategoryValuesTableAnnotationComposer
         getCurrentColumn: (t) => t.categoryId,
         referencedTable: $db.categories,
         getReferencedColumn: (t) => t.id,
+=======
+    return f(composer);
+  }
+
+  Expression<T> categoriesRefs<T extends Object>(
+      Expression<T> Function($$CategoriesTableAnnotationComposer a) f) {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.defaultDisplayUnitId,
+
+      
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
@@ -4046,6 +4329,8 @@ class $$ProductCategoryValuesTableAnnotationComposer
               $removeJoinBuilderFromRootComposer:
                   $removeJoinBuilderFromRootComposer,
             ));
+
+    
     return composer;
   }
 
@@ -4084,10 +4369,58 @@ class $$ProductCategoryValuesTableTableManager extends RootTableManager<
     PrefetchHooks Function({bool productId, bool categoryId, bool unitId})> {
   $$ProductCategoryValuesTableTableManager(
       _$AppDatabase db, $ProductCategoryValuesTable table)
+=======
+    return f(composer);
+  }
+
+  Expression<T> productCategoryValuesRefs<T extends Object>(
+      Expression<T> Function($$ProductCategoryValuesTableAnnotationComposer a)
+          f) {
+    final $$ProductCategoryValuesTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.productCategoryValues,
+            getReferencedColumn: (t) => t.unitId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$ProductCategoryValuesTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.productCategoryValues,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
+}
+
+class $$UnitsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $UnitsTable,
+    Unit,
+    $$UnitsTableFilterComposer,
+    $$UnitsTableOrderingComposer,
+    $$UnitsTableAnnotationComposer,
+    $$UnitsTableCreateCompanionBuilder,
+    $$UnitsTableUpdateCompanionBuilder,
+    (Unit, $$UnitsTableReferences),
+    Unit,
+    PrefetchHooks Function(
+        {bool productsRefs,
+        bool categoriesRefs,
+        bool productCategoryValuesRefs})> {
+  $$UnitsTableTableManager(_$AppDatabase db, $UnitsTable table)
+
+    
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
+
+        
               $$ProductCategoryValuesTableFilterComposer(
                   $db: db, $table: table),
           createOrderingComposer: () =>
@@ -4261,13 +4594,179 @@ final class $$MealsTableReferences
         .filter((f) => f.mealId.id($_item.id));
 
     final cache = $_typedResult.readTableOrNull(_logItemsRefsTable($_db));
+=======
+              $$UnitsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UnitsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UnitsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String> dimension = const Value.absent(),
+            Value<double> factorToBase = const Value.absent(),
+            Value<bool> isCustom = const Value.absent(),
+          }) =>
+              UnitsCompanion(
+            id: id,
+            name: name,
+            dimension: dimension,
+            factorToBase: factorToBase,
+            isCustom: isCustom,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String name,
+            required String dimension,
+            required double factorToBase,
+            Value<bool> isCustom = const Value.absent(),
+          }) =>
+              UnitsCompanion.insert(
+            id: id,
+            name: name,
+            dimension: dimension,
+            factorToBase: factorToBase,
+            isCustom: isCustom,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$UnitsTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: (
+              {productsRefs = false,
+              categoriesRefs = false,
+              productCategoryValuesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (productsRefs) db.products,
+                if (categoriesRefs) db.categories,
+                if (productCategoryValuesRefs) db.productCategoryValues
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (productsRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable:
+                            $$UnitsTableReferences._productsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UnitsTableReferences(db, table, p0).productsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems.where(
+                                (e) => e.defaultServingUnitId == item.id),
+                        typedResults: items),
+                  if (categoriesRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable:
+                            $$UnitsTableReferences._categoriesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UnitsTableReferences(db, table, p0)
+                                .categoriesRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems.where(
+                                (e) => e.defaultDisplayUnitId == item.id),
+                        typedResults: items),
+                  if (productCategoryValuesRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$UnitsTableReferences
+                            ._productCategoryValuesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UnitsTableReferences(db, table, p0)
+                                .productCategoryValuesRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.unitId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$UnitsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $UnitsTable,
+    Unit,
+    $$UnitsTableFilterComposer,
+    $$UnitsTableOrderingComposer,
+    $$UnitsTableAnnotationComposer,
+    $$UnitsTableCreateCompanionBuilder,
+    $$UnitsTableUpdateCompanionBuilder,
+    (Unit, $$UnitsTableReferences),
+    Unit,
+    PrefetchHooks Function(
+        {bool productsRefs,
+        bool categoriesRefs,
+        bool productCategoryValuesRefs})>;
+typedef $$ProductsTableCreateCompanionBuilder = ProductsCompanion Function({
+  Value<int> id,
+  required String name,
+  required double defaultServingSize,
+  required int defaultServingUnitId,
+});
+typedef $$ProductsTableUpdateCompanionBuilder = ProductsCompanion Function({
+  Value<int> id,
+  Value<String> name,
+  Value<double> defaultServingSize,
+  Value<int> defaultServingUnitId,
+});
+
+final class $$ProductsTableReferences
+    extends BaseReferences<_$AppDatabase, $ProductsTable, Product> {
+  $$ProductsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $UnitsTable _defaultServingUnitIdTable(_$AppDatabase db) =>
+      db.units.createAlias(
+          $_aliasNameGenerator(db.products.defaultServingUnitId, db.units.id));
+
+  $$UnitsTableProcessedTableManager? get defaultServingUnitId {
+    if ($_item.defaultServingUnitId == null) return null;
+    final manager = $$UnitsTableTableManager($_db, $_db.units)
+        .filter((f) => f.id($_item.defaultServingUnitId!));
+    final item =
+        $_typedResult.readTableOrNull(_defaultServingUnitIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$ProductCategoryValuesTable,
+      List<ProductCategoryValue>> _productCategoryValuesRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.productCategoryValues,
+          aliasName: $_aliasNameGenerator(
+              db.products.id, db.productCategoryValues.productId));
+
+  $$ProductCategoryValuesTableProcessedTableManager
+      get productCategoryValuesRefs {
+    final manager = $$ProductCategoryValuesTableTableManager(
+            $_db, $_db.productCategoryValues)
+        .filter((f) => f.productId.id($_item.id));
+
+    final cache =
+        $_typedResult.readTableOrNull(_productCategoryValuesRefsTable($_db));
+
+    
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
 }
 
+
+      
 class $$MealsTableFilterComposer extends Composer<_$AppDatabase, $MealsTable> {
   $$MealsTableFilterComposer({
+=======
+class $$ProductsTableFilterComposer
+    extends Composer<_$AppDatabase, $ProductsTable> {
+  $$ProductsTableFilterComposer({
+
+    
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4280,6 +4779,8 @@ class $$MealsTableFilterComposer extends Composer<_$AppDatabase, $MealsTable> {
   ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnFilters(column));
 
+
+  
   ColumnFilters<String> get notes => $composableBuilder(
       column: $table.notes, builder: (column) => ColumnFilters(column));
 
@@ -4317,11 +4818,32 @@ class $$MealsTableFilterComposer extends Composer<_$AppDatabase, $MealsTable> {
             $$MealCategoryValuesTableFilterComposer(
               $db: $db,
               $table: $db.mealCategoryValues,
+=======
+  ColumnFilters<double> get defaultServingSize => $composableBuilder(
+      column: $table.defaultServingSize,
+      builder: (column) => ColumnFilters(column));
+
+  $$UnitsTableFilterComposer get defaultServingUnitId {
+    final $$UnitsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.defaultServingUnitId,
+        referencedTable: $db.units,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UnitsTableFilterComposer(
+              $db: $db,
+              $table: $db.units,
+
+              
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
                   $removeJoinBuilderFromRootComposer,
             ));
+
+    
     return f(composer);
   }
 
@@ -4343,13 +4865,47 @@ class $$MealsTableFilterComposer extends Composer<_$AppDatabase, $MealsTable> {
               $removeJoinBuilderFromRootComposer:
                   $removeJoinBuilderFromRootComposer,
             ));
+=======
+    return composer;
+  }
+
+  Expression<bool> productCategoryValuesRefs(
+      Expression<bool> Function($$ProductCategoryValuesTableFilterComposer f)
+          f) {
+    final $$ProductCategoryValuesTableFilterComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.productCategoryValues,
+            getReferencedColumn: (t) => t.productId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$ProductCategoryValuesTableFilterComposer(
+                  $db: $db,
+                  $table: $db.productCategoryValues,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+
+    
     return f(composer);
   }
 }
 
+
+              
 class $$MealsTableOrderingComposer
     extends Composer<_$AppDatabase, $MealsTable> {
   $$MealsTableOrderingComposer({
+=======
+class $$ProductsTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProductsTable> {
+  $$ProductsTableOrderingComposer({
+
+    
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4362,6 +4918,8 @@ class $$MealsTableOrderingComposer
   ColumnOrderings<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnOrderings(column));
 
+
+  
   ColumnOrderings<String> get notes => $composableBuilder(
       column: $table.notes, builder: (column) => ColumnOrderings(column));
 }
@@ -4369,6 +4927,37 @@ class $$MealsTableOrderingComposer
 class $$MealsTableAnnotationComposer
     extends Composer<_$AppDatabase, $MealsTable> {
   $$MealsTableAnnotationComposer({
+=======
+  ColumnOrderings<double> get defaultServingSize => $composableBuilder(
+      column: $table.defaultServingSize,
+      builder: (column) => ColumnOrderings(column));
+
+  $$UnitsTableOrderingComposer get defaultServingUnitId {
+    final $$UnitsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.defaultServingUnitId,
+        referencedTable: $db.units,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UnitsTableOrderingComposer(
+              $db: $db,
+              $table: $db.units,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$ProductsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProductsTable> {
+  $$ProductsTableAnnotationComposer({
+
+    
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4381,6 +4970,8 @@ class $$MealsTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
+
+      
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
 
@@ -4397,11 +4988,31 @@ class $$MealsTableAnnotationComposer
             $$MealEntriesTableAnnotationComposer(
               $db: $db,
               $table: $db.mealEntries,
+=======
+  GeneratedColumn<double> get defaultServingSize => $composableBuilder(
+      column: $table.defaultServingSize, builder: (column) => column);
+
+  $$UnitsTableAnnotationComposer get defaultServingUnitId {
+    final $$UnitsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.defaultServingUnitId,
+        referencedTable: $db.units,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UnitsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.units,
+
+              
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
                   $removeJoinBuilderFromRootComposer,
             ));
+
+    
     return f(composer);
   }
 
@@ -4419,6 +5030,27 @@ class $$MealsTableAnnotationComposer
                 $$MealCategoryValuesTableAnnotationComposer(
                   $db: $db,
                   $table: $db.mealCategoryValues,
+=======
+    return composer;
+  }
+
+  Expression<T> productCategoryValuesRefs<T extends Object>(
+      Expression<T> Function($$ProductCategoryValuesTableAnnotationComposer a)
+          f) {
+    final $$ProductCategoryValuesTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.productCategoryValues,
+            getReferencedColumn: (t) => t.productId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$ProductCategoryValuesTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.productCategoryValues,
+
+                  
                   $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
                   joinBuilder: joinBuilder,
                   $removeJoinBuilderFromRootComposer:
@@ -4426,6 +5058,8 @@ class $$MealsTableAnnotationComposer
                 ));
     return f(composer);
   }
+
+                  
 
   Expression<T> logItemsRefs<T extends Object>(
       Expression<T> Function($$LogItemsTableAnnotationComposer a) f) {
@@ -4465,10 +5099,31 @@ class $$MealsTableTableManager extends RootTableManager<
         bool mealCategoryValuesRefs,
         bool logItemsRefs})> {
   $$MealsTableTableManager(_$AppDatabase db, $MealsTable table)
+=======
+}
+
+class $$ProductsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $ProductsTable,
+    Product,
+    $$ProductsTableFilterComposer,
+    $$ProductsTableOrderingComposer,
+    $$ProductsTableAnnotationComposer,
+    $$ProductsTableCreateCompanionBuilder,
+    $$ProductsTableUpdateCompanionBuilder,
+    (Product, $$ProductsTableReferences),
+    Product,
+    PrefetchHooks Function(
+        {bool defaultServingUnitId, bool productCategoryValuesRefs})> {
+  $$ProductsTableTableManager(_$AppDatabase db, $ProductsTable table)
+
+    
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
+
+        
               $$MealsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
               $$MealsTableOrderingComposer($db: db, $table: table),
@@ -4546,6 +5201,90 @@ class $$MealsTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.mealId == item.id),
+=======
+              $$ProductsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProductsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProductsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<double> defaultServingSize = const Value.absent(),
+            Value<int> defaultServingUnitId = const Value.absent(),
+          }) =>
+              ProductsCompanion(
+            id: id,
+            name: name,
+            defaultServingSize: defaultServingSize,
+            defaultServingUnitId: defaultServingUnitId,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String name,
+            required double defaultServingSize,
+            required int defaultServingUnitId,
+          }) =>
+              ProductsCompanion.insert(
+            id: id,
+            name: name,
+            defaultServingSize: defaultServingSize,
+            defaultServingUnitId: defaultServingUnitId,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$ProductsTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: (
+              {defaultServingUnitId = false,
+              productCategoryValuesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (productCategoryValuesRefs) db.productCategoryValues
+              ],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (defaultServingUnitId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.defaultServingUnitId,
+                    referencedTable: $$ProductsTableReferences
+                        ._defaultServingUnitIdTable(db),
+                    referencedColumn: $$ProductsTableReferences
+                        ._defaultServingUnitIdTable(db)
+                        .id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (productCategoryValuesRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$ProductsTableReferences
+                            ._productCategoryValuesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$ProductsTableReferences(db, table, p0)
+                                .productCategoryValuesRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.productId == item.id),
+
+                      
                         typedResults: items)
                 ];
               },
@@ -4554,6 +5293,8 @@ class $$MealsTableTableManager extends RootTableManager<
         ));
 }
 
+
+                  
 typedef $$MealsTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $MealsTable,
@@ -4596,11 +5337,58 @@ final class $$MealEntriesTableReferences
     final manager = $$MealsTableTableManager($_db, $_db.meals)
         .filter((f) => f.id($_item.mealId!));
     final item = $_typedResult.readTableOrNull(_mealIdTable($_db));
+=======
+typedef $$ProductsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $ProductsTable,
+    Product,
+    $$ProductsTableFilterComposer,
+    $$ProductsTableOrderingComposer,
+    $$ProductsTableAnnotationComposer,
+    $$ProductsTableCreateCompanionBuilder,
+    $$ProductsTableUpdateCompanionBuilder,
+    (Product, $$ProductsTableReferences),
+    Product,
+    PrefetchHooks Function(
+        {bool defaultServingUnitId, bool productCategoryValuesRefs})>;
+typedef $$CategoriesTableCreateCompanionBuilder = CategoriesCompanion Function({
+  Value<int> id,
+  required String name,
+  required String baseDimension,
+  required int defaultDisplayUnitId,
+  Value<bool> isCustom,
+});
+typedef $$CategoriesTableUpdateCompanionBuilder = CategoriesCompanion Function({
+  Value<int> id,
+  Value<String> name,
+  Value<String> baseDimension,
+  Value<int> defaultDisplayUnitId,
+  Value<bool> isCustom,
+});
+
+final class $$CategoriesTableReferences
+    extends BaseReferences<_$AppDatabase, $CategoriesTable, Category> {
+  $$CategoriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $UnitsTable _defaultDisplayUnitIdTable(_$AppDatabase db) =>
+      db.units.createAlias($_aliasNameGenerator(
+          db.categories.defaultDisplayUnitId, db.units.id));
+
+  $$UnitsTableProcessedTableManager? get defaultDisplayUnitId {
+    if ($_item.defaultDisplayUnitId == null) return null;
+    final manager = $$UnitsTableTableManager($_db, $_db.units)
+        .filter((f) => f.id($_item.defaultDisplayUnitId!));
+    final item =
+        $_typedResult.readTableOrNull(_defaultDisplayUnitIdTable($_db));
+
+    
     if (item == null) return manager;
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: [item]));
   }
 
+
+  
   static $ProductsTable _productIdTable(_$AppDatabase db) =>
       db.products.createAlias(
           $_aliasNameGenerator(db.mealEntries.productId, db.products.id));
@@ -4619,6 +5407,32 @@ final class $$MealEntriesTableReferences
 class $$MealEntriesTableFilterComposer
     extends Composer<_$AppDatabase, $MealEntriesTable> {
   $$MealEntriesTableFilterComposer({
+=======
+  static MultiTypedResultKey<$ProductCategoryValuesTable,
+      List<ProductCategoryValue>> _productCategoryValuesRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.productCategoryValues,
+          aliasName: $_aliasNameGenerator(
+              db.categories.id, db.productCategoryValues.categoryId));
+
+  $$ProductCategoryValuesTableProcessedTableManager
+      get productCategoryValuesRefs {
+    final manager = $$ProductCategoryValuesTableTableManager(
+            $_db, $_db.productCategoryValues)
+        .filter((f) => f.categoryId.id($_item.id));
+
+    final cache =
+        $_typedResult.readTableOrNull(_productCategoryValuesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$CategoriesTableFilterComposer
+    extends Composer<_$AppDatabase, $CategoriesTable> {
+  $$CategoriesTableFilterComposer({
+
+    
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4628,6 +5442,8 @@ class $$MealEntriesTableFilterComposer
   ColumnFilters<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
 
+
+      
   ColumnFilters<double> get quantity => $composableBuilder(
       column: $table.quantity, builder: (column) => ColumnFilters(column));
 
@@ -4636,13 +5452,38 @@ class $$MealEntriesTableFilterComposer
         composer: this,
         getCurrentColumn: (t) => t.mealId,
         referencedTable: $db.meals,
+=======
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get baseDimension => $composableBuilder(
+      column: $table.baseDimension, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isCustom => $composableBuilder(
+      column: $table.isCustom, builder: (column) => ColumnFilters(column));
+
+  $$UnitsTableFilterComposer get defaultDisplayUnitId {
+    final $$UnitsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.defaultDisplayUnitId,
+        referencedTable: $db.units,
+
+      
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
+
+      
             $$MealsTableFilterComposer(
               $db: $db,
               $table: $db.meals,
+=======
+            $$UnitsTableFilterComposer(
+              $db: $db,
+              $table: $db.units,
+
+              
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -4651,6 +5492,8 @@ class $$MealEntriesTableFilterComposer
     return composer;
   }
 
+
+      
   $$ProductsTableFilterComposer get productId {
     final $$ProductsTableFilterComposer composer = $composerBuilder(
         composer: this,
@@ -4675,6 +5518,35 @@ class $$MealEntriesTableFilterComposer
 class $$MealEntriesTableOrderingComposer
     extends Composer<_$AppDatabase, $MealEntriesTable> {
   $$MealEntriesTableOrderingComposer({
+=======
+  Expression<bool> productCategoryValuesRefs(
+      Expression<bool> Function($$ProductCategoryValuesTableFilterComposer f)
+          f) {
+    final $$ProductCategoryValuesTableFilterComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.productCategoryValues,
+            getReferencedColumn: (t) => t.categoryId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$ProductCategoryValuesTableFilterComposer(
+                  $db: $db,
+                  $table: $db.productCategoryValues,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
+}
+
+class $$CategoriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $CategoriesTable> {
+  $$CategoriesTableOrderingComposer({
+ 
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4684,6 +5556,8 @@ class $$MealEntriesTableOrderingComposer
   ColumnOrderings<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
+
+      
   ColumnOrderings<double> get quantity => $composableBuilder(
       column: $table.quantity, builder: (column) => ColumnOrderings(column));
 
@@ -4712,13 +5586,37 @@ class $$MealEntriesTableOrderingComposer
         composer: this,
         getCurrentColumn: (t) => t.productId,
         referencedTable: $db.products,
+=======
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get baseDimension => $composableBuilder(
+      column: $table.baseDimension,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isCustom => $composableBuilder(
+      column: $table.isCustom, builder: (column) => ColumnOrderings(column));
+
+  $$UnitsTableOrderingComposer get defaultDisplayUnitId {
+    final $$UnitsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.defaultDisplayUnitId,
+        referencedTable: $db.units,
+ 
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
+
+      
             $$ProductsTableOrderingComposer(
               $db: $db,
               $table: $db.products,
+=======
+            $$UnitsTableOrderingComposer(
+              $db: $db,
+              $table: $db.units,
+ 
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -4728,9 +5626,16 @@ class $$MealEntriesTableOrderingComposer
   }
 }
 
+
+      
 class $$MealEntriesTableAnnotationComposer
     extends Composer<_$AppDatabase, $MealEntriesTable> {
   $$MealEntriesTableAnnotationComposer({
+=======
+class $$CategoriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CategoriesTable> {
+  $$CategoriesTableAnnotationComposer({
+ 
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4740,6 +5645,8 @@ class $$MealEntriesTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
+
+  
   GeneratedColumn<double> get quantity =>
       $composableBuilder(column: $table.quantity, builder: (column) => column);
 
@@ -4748,13 +5655,36 @@ class $$MealEntriesTableAnnotationComposer
         composer: this,
         getCurrentColumn: (t) => t.mealId,
         referencedTable: $db.meals,
+=======
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get baseDimension => $composableBuilder(
+      column: $table.baseDimension, builder: (column) => column);
+
+  GeneratedColumn<bool> get isCustom =>
+      $composableBuilder(column: $table.isCustom, builder: (column) => column);
+
+  $$UnitsTableAnnotationComposer get defaultDisplayUnitId {
+    final $$UnitsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.defaultDisplayUnitId,
+        referencedTable: $db.units,
+ 
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
                 $removeJoinBuilderFromRootComposer}) =>
+
+      
             $$MealsTableAnnotationComposer(
               $db: $db,
               $table: $db.meals,
+=======
+            $$UnitsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.units,
+ 
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -4763,6 +5693,8 @@ class $$MealEntriesTableAnnotationComposer
     return composer;
   }
 
+
+      
   $$ProductsTableAnnotationComposer get productId {
     final $$ProductsTableAnnotationComposer composer = $composerBuilder(
         composer: this,
@@ -4797,10 +5729,52 @@ class $$MealEntriesTableTableManager extends RootTableManager<
     MealEntry,
     PrefetchHooks Function({bool mealId, bool productId})> {
   $$MealEntriesTableTableManager(_$AppDatabase db, $MealEntriesTable table)
+=======
+  Expression<T> productCategoryValuesRefs<T extends Object>(
+      Expression<T> Function($$ProductCategoryValuesTableAnnotationComposer a)
+          f) {
+    final $$ProductCategoryValuesTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.productCategoryValues,
+            getReferencedColumn: (t) => t.categoryId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$ProductCategoryValuesTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.productCategoryValues,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
+}
+
+class $$CategoriesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $CategoriesTable,
+    Category,
+    $$CategoriesTableFilterComposer,
+    $$CategoriesTableOrderingComposer,
+    $$CategoriesTableAnnotationComposer,
+    $$CategoriesTableCreateCompanionBuilder,
+    $$CategoriesTableUpdateCompanionBuilder,
+    (Category, $$CategoriesTableReferences),
+    Category,
+    PrefetchHooks Function(
+        {bool defaultDisplayUnitId, bool productCategoryValuesRefs})> {
+  $$CategoriesTableTableManager(_$AppDatabase db, $CategoriesTable table)
+ 
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
+
+        
               $$MealEntriesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
               $$MealEntriesTableOrderingComposer($db: db, $table: table),
@@ -4829,10 +5803,46 @@ class $$MealEntriesTableTableManager extends RootTableManager<
             mealId: mealId,
             productId: productId,
             quantity: quantity,
+=======
+              $$CategoriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CategoriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CategoriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String> baseDimension = const Value.absent(),
+            Value<int> defaultDisplayUnitId = const Value.absent(),
+            Value<bool> isCustom = const Value.absent(),
+          }) =>
+              CategoriesCompanion(
+            id: id,
+            name: name,
+            baseDimension: baseDimension,
+            defaultDisplayUnitId: defaultDisplayUnitId,
+            isCustom: isCustom,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String name,
+            required String baseDimension,
+            required int defaultDisplayUnitId,
+            Value<bool> isCustom = const Value.absent(),
+          }) =>
+              CategoriesCompanion.insert(
+            id: id,
+            name: name,
+            baseDimension: baseDimension,
+            defaultDisplayUnitId: defaultDisplayUnitId,
+            isCustom: isCustom,
+ 
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (
                     e.readTable(table),
+
+                
                     $$MealEntriesTableReferences(db, table, e)
                   ))
               .toList(),
@@ -4840,6 +5850,18 @@ class $$MealEntriesTableTableManager extends RootTableManager<
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
+=======
+                    $$CategoriesTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: (
+              {defaultDisplayUnitId = false,
+              productCategoryValuesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (productCategoryValuesRefs) db.productCategoryValues
+              ],
               addJoins: <
                   T extends TableManagerState<
                       dynamic,
@@ -4871,6 +5893,16 @@ class $$MealEntriesTableTableManager extends RootTableManager<
                         $$MealEntriesTableReferences._productIdTable(db),
                     referencedColumn:
                         $$MealEntriesTableReferences._productIdTable(db).id,
+=======
+                if (defaultDisplayUnitId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.defaultDisplayUnitId,
+                    referencedTable: $$CategoriesTableReferences
+                        ._defaultDisplayUnitIdTable(db),
+                    referencedColumn: $$CategoriesTableReferences
+                        ._defaultDisplayUnitIdTable(db)
+                        .id,
                   ) as T;
                 }
 
@@ -4926,6 +5958,71 @@ final class $$MealCategoryValuesTableReferences extends BaseReferences<
     final manager = $$MealsTableTableManager($_db, $_db.meals)
         .filter((f) => f.id($_item.mealId!));
     final item = $_typedResult.readTableOrNull(_mealIdTable($_db));
+=======
+                return [
+                  if (productCategoryValuesRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$CategoriesTableReferences
+                            ._productCategoryValuesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$CategoriesTableReferences(db, table, p0)
+                                .productCategoryValuesRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.categoryId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$CategoriesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $CategoriesTable,
+    Category,
+    $$CategoriesTableFilterComposer,
+    $$CategoriesTableOrderingComposer,
+    $$CategoriesTableAnnotationComposer,
+    $$CategoriesTableCreateCompanionBuilder,
+    $$CategoriesTableUpdateCompanionBuilder,
+    (Category, $$CategoriesTableReferences),
+    Category,
+    PrefetchHooks Function(
+        {bool defaultDisplayUnitId, bool productCategoryValuesRefs})>;
+typedef $$ProductCategoryValuesTableCreateCompanionBuilder
+    = ProductCategoryValuesCompanion Function({
+  Value<int> id,
+  required int productId,
+  required int categoryId,
+  required double value,
+  required int unitId,
+});
+typedef $$ProductCategoryValuesTableUpdateCompanionBuilder
+    = ProductCategoryValuesCompanion Function({
+  Value<int> id,
+  Value<int> productId,
+  Value<int> categoryId,
+  Value<double> value,
+  Value<int> unitId,
+});
+
+final class $$ProductCategoryValuesTableReferences extends BaseReferences<
+    _$AppDatabase, $ProductCategoryValuesTable, ProductCategoryValue> {
+  $$ProductCategoryValuesTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $ProductsTable _productIdTable(_$AppDatabase db) =>
+      db.products.createAlias($_aliasNameGenerator(
+          db.productCategoryValues.productId, db.products.id));
+
+  $$ProductsTableProcessedTableManager? get productId {
+    if ($_item.productId == null) return null;
+    final manager = $$ProductsTableTableManager($_db, $_db.products)
+        .filter((f) => f.id($_item.productId!));
+    final item = $_typedResult.readTableOrNull(_productIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: [item]));
@@ -4934,6 +6031,8 @@ final class $$MealCategoryValuesTableReferences extends BaseReferences<
   static $CategoriesTable _categoryIdTable(_$AppDatabase db) =>
       db.categories.createAlias($_aliasNameGenerator(
           db.mealCategoryValues.categoryId, db.categories.id));
+=======
+          db.productCategoryValues.categoryId, db.categories.id));
 
   $$CategoriesTableProcessedTableManager? get categoryId {
     if ($_item.categoryId == null) return null;
@@ -4954,6 +6053,15 @@ final class $$MealCategoryValuesTableReferences extends BaseReferences<
     final manager = $$UnitsTableTableManager($_db, $_db.units)
         .filter((f) => f.id($_item.originalUnitId!));
     final item = $_typedResult.readTableOrNull(_originalUnitIdTable($_db));
+=======
+  static $UnitsTable _unitIdTable(_$AppDatabase db) => db.units.createAlias(
+      $_aliasNameGenerator(db.productCategoryValues.unitId, db.units.id));
+
+  $$UnitsTableProcessedTableManager? get unitId {
+    if ($_item.unitId == null) return null;
+    final manager = $$UnitsTableTableManager($_db, $_db.units)
+        .filter((f) => f.id($_item.unitId!));
+    final item = $_typedResult.readTableOrNull(_unitIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: [item]));
@@ -4963,6 +6071,10 @@ final class $$MealCategoryValuesTableReferences extends BaseReferences<
 class $$MealCategoryValuesTableFilterComposer
     extends Composer<_$AppDatabase, $MealCategoryValuesTable> {
   $$MealCategoryValuesTableFilterComposer({
+=======
+class $$ProductCategoryValuesTableFilterComposer
+    extends Composer<_$AppDatabase, $ProductCategoryValuesTable> {
+  $$ProductCategoryValuesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -4980,6 +6092,12 @@ class $$MealCategoryValuesTableFilterComposer
         composer: this,
         getCurrentColumn: (t) => t.mealId,
         referencedTable: $db.meals,
+=======
+  $$ProductsTableFilterComposer get productId {
+    final $$ProductsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.productId,
+        referencedTable: $db.products,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
@@ -4987,6 +6105,10 @@ class $$MealCategoryValuesTableFilterComposer
             $$MealsTableFilterComposer(
               $db: $db,
               $table: $db.meals,
+=======
+            $$ProductsTableFilterComposer(
+              $db: $db,
+              $table: $db.products,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -5019,6 +6141,11 @@ class $$MealCategoryValuesTableFilterComposer
     final $$UnitsTableFilterComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.originalUnitId,
+=======
+  $$UnitsTableFilterComposer get unitId {
+    final $$UnitsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.unitId,
         referencedTable: $db.units,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
@@ -5039,6 +6166,10 @@ class $$MealCategoryValuesTableFilterComposer
 class $$MealCategoryValuesTableOrderingComposer
     extends Composer<_$AppDatabase, $MealCategoryValuesTable> {
   $$MealCategoryValuesTableOrderingComposer({
+=======
+class $$ProductCategoryValuesTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProductCategoryValuesTable> {
+  $$ProductCategoryValuesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -5056,6 +6187,12 @@ class $$MealCategoryValuesTableOrderingComposer
         composer: this,
         getCurrentColumn: (t) => t.mealId,
         referencedTable: $db.meals,
+=======
+  $$ProductsTableOrderingComposer get productId {
+    final $$ProductsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.productId,
+        referencedTable: $db.products,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
@@ -5063,6 +6200,10 @@ class $$MealCategoryValuesTableOrderingComposer
             $$MealsTableOrderingComposer(
               $db: $db,
               $table: $db.meals,
+=======
+            $$ProductsTableOrderingComposer(
+              $db: $db,
+              $table: $db.products,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -5095,6 +6236,11 @@ class $$MealCategoryValuesTableOrderingComposer
     final $$UnitsTableOrderingComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.originalUnitId,
+=======
+  $$UnitsTableOrderingComposer get unitId {
+    final $$UnitsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.unitId,
         referencedTable: $db.units,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
@@ -5115,6 +6261,10 @@ class $$MealCategoryValuesTableOrderingComposer
 class $$MealCategoryValuesTableAnnotationComposer
     extends Composer<_$AppDatabase, $MealCategoryValuesTable> {
   $$MealCategoryValuesTableAnnotationComposer({
+=======
+class $$ProductCategoryValuesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProductCategoryValuesTable> {
+  $$ProductCategoryValuesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
@@ -5132,6 +6282,12 @@ class $$MealCategoryValuesTableAnnotationComposer
         composer: this,
         getCurrentColumn: (t) => t.mealId,
         referencedTable: $db.meals,
+=======
+  $$ProductsTableAnnotationComposer get productId {
+    final $$ProductsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.productId,
+        referencedTable: $db.products,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
                 {$addJoinBuilderToRootComposer,
@@ -5139,6 +6295,10 @@ class $$MealCategoryValuesTableAnnotationComposer
             $$MealsTableAnnotationComposer(
               $db: $db,
               $table: $db.meals,
+=======
+            $$ProductsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.products,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -5171,6 +6331,11 @@ class $$MealCategoryValuesTableAnnotationComposer
     final $$UnitsTableAnnotationComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.originalUnitId,
+=======
+  $$UnitsTableAnnotationComposer get unitId {
+    final $$UnitsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.unitId,
         referencedTable: $db.units,
         getReferencedColumn: (t) => t.id,
         builder: (joinBuilder,
@@ -5203,6 +6368,21 @@ class $$MealCategoryValuesTableTableManager extends RootTableManager<
         {bool mealId, bool categoryId, bool originalUnitId})> {
   $$MealCategoryValuesTableTableManager(
       _$AppDatabase db, $MealCategoryValuesTable table)
+=======
+class $$ProductCategoryValuesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $ProductCategoryValuesTable,
+    ProductCategoryValue,
+    $$ProductCategoryValuesTableFilterComposer,
+    $$ProductCategoryValuesTableOrderingComposer,
+    $$ProductCategoryValuesTableAnnotationComposer,
+    $$ProductCategoryValuesTableCreateCompanionBuilder,
+    $$ProductCategoryValuesTableUpdateCompanionBuilder,
+    (ProductCategoryValue, $$ProductCategoryValuesTableReferences),
+    ProductCategoryValue,
+    PrefetchHooks Function({bool productId, bool categoryId, bool unitId})> {
+  $$ProductCategoryValuesTableTableManager(
+      _$AppDatabase db, $ProductCategoryValuesTable table)
       : super(TableManagerState(
           db: db,
           table: table,
@@ -5240,6 +6420,42 @@ class $$MealCategoryValuesTableTableManager extends RootTableManager<
             categoryId: categoryId,
             value: value,
             originalUnitId: originalUnitId,
+=======
+              $$ProductCategoryValuesTableFilterComposer(
+                  $db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProductCategoryValuesTableOrderingComposer(
+                  $db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProductCategoryValuesTableAnnotationComposer(
+                  $db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> productId = const Value.absent(),
+            Value<int> categoryId = const Value.absent(),
+            Value<double> value = const Value.absent(),
+            Value<int> unitId = const Value.absent(),
+          }) =>
+              ProductCategoryValuesCompanion(
+            id: id,
+            productId: productId,
+            categoryId: categoryId,
+            value: value,
+            unitId: unitId,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int productId,
+            required int categoryId,
+            required double value,
+            required int unitId,
+          }) =>
+              ProductCategoryValuesCompanion.insert(
+            id: id,
+            productId: productId,
+            categoryId: categoryId,
+            value: value,
+            unitId: unitId,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (
@@ -5249,6 +6465,12 @@ class $$MealCategoryValuesTableTableManager extends RootTableManager<
               .toList(),
           prefetchHooksCallback: (
               {mealId = false, categoryId = false, originalUnitId = false}) {
+=======
+                    $$ProductCategoryValuesTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: (
+              {productId = false, categoryId = false, unitId = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -5273,6 +6495,17 @@ class $$MealCategoryValuesTableTableManager extends RootTableManager<
                         $$MealCategoryValuesTableReferences._mealIdTable(db),
                     referencedColumn:
                         $$MealCategoryValuesTableReferences._mealIdTable(db).id,
+=======
+                if (productId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.productId,
+                    referencedTable: $$ProductCategoryValuesTableReferences
+                        ._productIdTable(db),
+                    referencedColumn: $$ProductCategoryValuesTableReferences
+                        ._productIdTable(db)
+                        .id,
+
                   ) as T;
                 }
                 if (categoryId) {
@@ -5282,6 +6515,11 @@ class $$MealCategoryValuesTableTableManager extends RootTableManager<
                     referencedTable: $$MealCategoryValuesTableReferences
                         ._categoryIdTable(db),
                     referencedColumn: $$MealCategoryValuesTableReferences
+=======
+                    referencedTable: $$ProductCategoryValuesTableReferences
+                        ._categoryIdTable(db),
+                    referencedColumn: $$ProductCategoryValuesTableReferences
+
                         ._categoryIdTable(db)
                         .id,
                   ) as T;
@@ -5294,6 +6532,16 @@ class $$MealCategoryValuesTableTableManager extends RootTableManager<
                         ._originalUnitIdTable(db),
                     referencedColumn: $$MealCategoryValuesTableReferences
                         ._originalUnitIdTable(db)
+=======
+                if (unitId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.unitId,
+                    referencedTable:
+                        $$ProductCategoryValuesTableReferences._unitIdTable(db),
+                    referencedColumn: $$ProductCategoryValuesTableReferences
+                        ._unitIdTable(db)
+
                         .id,
                   ) as T;
                 }
@@ -5583,6 +6831,21 @@ typedef $$LogItemsTableProcessedTableManager = ProcessedTableManager<
     (LogItem, $$LogItemsTableReferences),
     LogItem,
     PrefetchHooks Function({bool mealId})>;
+=======
+typedef $$ProductCategoryValuesTableProcessedTableManager
+    = ProcessedTableManager<
+        _$AppDatabase,
+        $ProductCategoryValuesTable,
+        ProductCategoryValue,
+        $$ProductCategoryValuesTableFilterComposer,
+        $$ProductCategoryValuesTableOrderingComposer,
+        $$ProductCategoryValuesTableAnnotationComposer,
+        $$ProductCategoryValuesTableCreateCompanionBuilder,
+        $$ProductCategoryValuesTableUpdateCompanionBuilder,
+        (ProductCategoryValue, $$ProductCategoryValuesTableReferences),
+        ProductCategoryValue,
+        PrefetchHooks Function({bool productId, bool categoryId, bool unitId})>;
+
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -5603,4 +6866,5 @@ class $AppDatabaseManager {
       $$MealCategoryValuesTableTableManager(_db, _db.mealCategoryValues);
   $$LogItemsTableTableManager get logItems =>
       $$LogItemsTableTableManager(_db, _db.logItems);
+
 }

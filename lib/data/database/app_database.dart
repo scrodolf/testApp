@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:convert';
-
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
@@ -19,6 +18,8 @@ part 'app_database.g.dart';
   MealCategoryValues,
   LogItems
 ])
+
+@DriftDatabase(tables: [Units, Products, Categories, ProductCategoryValues])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -79,6 +80,7 @@ class Products extends Table {
   TextColumn get customUnitRatios => text()
       .withDefault(const Constant('{}'))
       .map(const IntDoubleMapConverter())();
+
 }
 
 /// Table defining nutritional categories such as calories or fat.
@@ -187,3 +189,4 @@ class IntDoubleMapConverter extends TypeConverter<Map<int, double>, String> {
   @override
   String toSql(Map<int, double> value) => json.encode(value);
 }
+

@@ -12,6 +12,9 @@ class ConversionServiceImpl implements IConversionService {
   @override
   Future<double> convert(double value, int sourceUnitId, int targetUnitId,
       {Map<int, double>? customUnitFactors}) async {
+=======
+  Future<double> convert(
+      double value, int sourceUnitId, int targetUnitId) async {
     try {
       final source = await _registry.getUnitById(sourceUnitId);
       final target = await _registry.getUnitById(targetUnitId);
@@ -21,6 +24,7 @@ class ConversionServiceImpl implements IConversionService {
       final targetFactor =
           customUnitFactors?[targetUnitId] ?? target.factorToBase;
 
+=======
       if (source.dimension != target.dimension) {
         throw InvalidConversionException(
           'Cannot convert between ${source.name} and ${target.name}: incompatible dimensions',
@@ -30,6 +34,8 @@ class ConversionServiceImpl implements IConversionService {
       }
 
       if (sourceFactor == 0 || targetFactor == 0) {
+=======
+      if (source.factorToBase == 0 || target.factorToBase == 0) {
         throw InvalidConversionException(
           'Missing conversion factor between ${source.name} and ${target.name}',
           sourceUnitId: sourceUnitId,
@@ -39,6 +45,9 @@ class ConversionServiceImpl implements IConversionService {
 
       final baseValue = value * sourceFactor;
       return baseValue / targetFactor;
+=======
+      final baseValue = value * source.factorToBase;
+      return baseValue / target.factorToBase;
     } on UnitNotFoundException catch (e) {
       throw InvalidConversionException(
         'Conversion failed due to missing unit: ${e.message}',

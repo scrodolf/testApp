@@ -27,6 +27,7 @@ class ProductRepositoryImpl implements IProductRepository {
       _dao.watchProductById(id);
 
   @override
+=======
   Future<int> insertProduct({
     required String name,
     required double defaultServingSize,

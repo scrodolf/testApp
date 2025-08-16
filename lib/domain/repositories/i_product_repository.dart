@@ -21,6 +21,7 @@ abstract class IProductRepository {
   /// Watches a single product and emits updates whenever it changes.
   Stream<ProductWithDetails?> watchProductById(int id);
 
+
   /// Inserts a new product and returns its identifier.
   Future<int> insertProduct({
     required String name,

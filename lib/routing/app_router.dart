@@ -8,6 +8,10 @@ import '../features/products/ui/product_list_screen.dart';
 import '../features/products/ui/add_product_form.dart';
 import '../features/products/ui/product_details_screen.dart';
 import '../features/products/ui/edit_product_form.dart';
+
+import '../features/meals/ui/meals_screen.dart';
+import '../features/products/ui/product_list_screen.dart';
+import '../features/products/ui/add_product_form.dart';
 import '../features/statistics/ui/statistics_screen.dart';
 import '../features/settings/ui/settings_screen.dart';
 import '../widgets/app_scaffold.dart';
@@ -54,6 +58,7 @@ final GoRouter appRouter = GoRouter(
                       mealId: int.parse(state.pathParameters['id']!)),
                 ),
               ],
+              builder: (context, state) => const MealsScreen(),
             ),
           ],
         ),

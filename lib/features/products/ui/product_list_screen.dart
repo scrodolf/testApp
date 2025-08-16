@@ -30,6 +30,7 @@ class ProductListScreen extends ConsumerWidget {
                 subtitle: Text(
                     '${p.product.defaultServingSize} ${p.defaultUnit.name}'),
                 onTap: () => context.push('/products/${p.product.id}'),
+
               );
             },
           );

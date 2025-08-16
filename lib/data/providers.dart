@@ -5,6 +5,7 @@ import 'package:food_app/core/exceptions/app_exceptions.dart';
 import 'package:food_app/core/unit_registry/unit_registry_impl.dart';
 import 'package:food_app/core/unit_registry/unit_registry_interface.dart';
 import 'package:food_app/data/daos/product_dao.dart';
+ 
 import 'package:food_app/data/daos/meal_dao.dart';
 import 'package:food_app/data/daos/meal_log_dao.dart';
 import 'package:food_app/data/database/app_database.dart';
@@ -16,6 +17,12 @@ import 'package:food_app/domain/repositories/i_meal_repository.dart';
 import 'package:food_app/domain/repositories/i_meal_log_repository.dart';
 import 'package:food_app/utils/date_time_utils.dart';
 import 'package:food_app/features/meals/services/meal_calculation_service.dart';
+=======
+import 'package:food_app/data/database/app_database.dart';
+import 'package:food_app/data/repositories/product_repository_impl.dart';
+import 'package:food_app/domain/repositories/i_product_repository.dart';
+import 'package:food_app/utils/date_time_utils.dart';
+ 
 
 /// Provides a lazily opened [AppDatabase] instance.
 final appDatabaseProvider = FutureProvider<AppDatabase>((ref) async {
@@ -59,6 +66,7 @@ final productRepositoryProvider =
   return ProductRepositoryImpl(dao, registry, conversion);
 });
 
+ 
 /// Provider for [MealDao].
 final mealDaoProvider = FutureProvider<MealDao>((ref) async {
   final db = await ref.watch(appDatabaseProvider.future);
@@ -121,6 +129,8 @@ final mealCalculationServiceProvider =
   return MealCalculationService(conversion);
 });
 
+=======
+ 
 /// Stream provider emitting all products with their details.
 final allProductsProvider =
     StreamProvider<List<ProductWithDetails>>((ref) async* {
@@ -128,6 +138,7 @@ final allProductsProvider =
   yield* repo.watchAllProducts();
 });
 
+ 
 /// Provides detailed information for a single product identified by [productId].
 final productDetailsProvider =
     StreamProvider.family<ProductWithDetails?, int>((ref, productId) async* {
@@ -135,6 +146,8 @@ final productDetailsProvider =
   yield* repo.watchProductById(productId);
 });
 
+=======
+ 
 /// Provider for the unit registry service.
 final unitRegistryProvider = FutureProvider<IUnitRegistry>((ref) async {
   final db = await ref.watch(appDatabaseProvider.future);
