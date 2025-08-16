@@ -18,16 +18,14 @@ class LogMealController extends AsyncNotifier<void> {
   Future<void> saveLog(
       {int? id,
       required int mealId,
-      required String date,
-      required String time,
-      required String mealType}) async {
+      required DateTime loggedAtLocal,
+      required int mealTypeId}) async {
     state = const AsyncLoading();
     final companion = LogItemsCompanion(
       id: id == null ? const dr.Value.absent() : dr.Value(id),
       mealId: dr.Value(mealId),
-      date: dr.Value(date),
-      time: dr.Value(time),
-      mealType: dr.Value(mealType),
+      loggedAtLocal: dr.Value(loggedAtLocal),
+      mealTypeId: dr.Value(mealTypeId),
     );
     if (id == null) {
       await _repo.insertLog(companion);

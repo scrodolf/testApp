@@ -1,12 +1,13 @@
 import 'package:drift/drift.dart';
 import 'package:food_app/data/database/app_database.dart';
 
-/// Combines a [LogItem] with its referenced [Meal].
-class LogWithMeal {
-  LogWithMeal({required this.log, required this.meal});
+/// Combines a [LogItem] with its referenced [Meal] and [MealType].
+class LogWithDetails {
+  LogWithDetails({required this.log, required this.meal, required this.mealType});
 
   final LogItem log;
   final Meal meal;
+  final MealType mealType;
 }
 
 /// DAO responsible for CRUD operations on [LogItems].
@@ -16,30 +17,39 @@ class MealLogDao {
   final AppDatabase _db;
 
   /// Watches all log items with their meals ordered by date/time.
-  Stream<List<LogWithMeal>> watchAllLogs() {
+  Stream<List<LogWithDetails>> watchAllLogs() {
     final query = _db.select(_db.logItems).join([
       innerJoin(_db.meals, _db.meals.id.equalsExp(_db.logItems.mealId)),
+      innerJoin(
+          _db.mealTypes, _db.mealTypes.id.equalsExp(_db.logItems.mealTypeId)),
     ])
       ..orderBy([
-        OrderingTerm(expression: _db.logItems.date, mode: OrderingMode.desc),
-        OrderingTerm(expression: _db.logItems.time, mode: OrderingMode.desc),
+        OrderingTerm(
+            expression: _db.logItems.loggedAtLocal, mode: OrderingMode.desc),
       ]);
-    return query.watch().map((rows) => rows
-        .map((r) => LogWithMeal(
-            log: r.readTable(_db.logItems), meal: r.readTable(_db.meals)))
-        .toList());
+    return query.watch().map((rows) =>
+        rows.map((r) => LogWithDetails(
+                log: r.readTable(_db.logItems),
+                meal: r.readTable(_db.meals),
+                mealType: r.readTable(_db.mealTypes)))
+            .toList());
   }
 
   /// Watches a single log entry by [id].
-  Stream<LogWithMeal?> watchLog(int id) {
-    final query =
-        (_db.select(_db.logItems)..where((tbl) => tbl.id.equals(id))).join([
+  Stream<LogWithDetails?> watchLog(int id) {
+    final query = (_db.select(_db.logItems)
+          ..where((tbl) => tbl.id.equals(id)))
+        .join([
       innerJoin(_db.meals, _db.meals.id.equalsExp(_db.logItems.mealId)),
+      innerJoin(
+          _db.mealTypes, _db.mealTypes.id.equalsExp(_db.logItems.mealTypeId)),
     ]);
     return query.watchSingleOrNull().map((row) {
       if (row == null) return null;
-      return LogWithMeal(
-          log: row.readTable(_db.logItems), meal: row.readTable(_db.meals));
+      return LogWithDetails(
+          log: row.readTable(_db.logItems),
+          meal: row.readTable(_db.meals),
+          mealType: row.readTable(_db.mealTypes));
     });
   }
 

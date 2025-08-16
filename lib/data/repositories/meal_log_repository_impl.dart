@@ -9,10 +9,10 @@ class MealLogRepositoryImpl implements IMealLogRepository {
   final MealLogDao _dao;
 
   @override
-  Stream<List<LogWithMeal>> watchAllLogs() => _dao.watchAllLogs();
+  Stream<List<LogWithDetails>> watchAllLogs() => _dao.watchAllLogs();
 
   @override
-  Stream<LogWithMeal?> watchLogById(int id) => _dao.watchLog(id);
+  Stream<LogWithDetails?> watchLogById(int id) => _dao.watchLog(id);
 
   @override
   Future<int> insertLog(LogItemsCompanion log) => _dao.insertLog(log);

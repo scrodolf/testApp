@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:drift/drift.dart' as dr;
+import 'package:table_calendar/table_calendar.dart';
 import 'package:food_app/data/database/app_database.dart';
 import 'package:food_app/data/daos/meal_log_dao.dart';
 import 'package:food_app/data/providers.dart';
@@ -17,14 +18,13 @@ class _LogsScreenState extends ConsumerState<LogsScreen>
     with SingleTickerProviderStateMixin {
   DateTime _selectedDate = DateTime.now();
 
-  Future<void> _deleteLog(BuildContext context, LogWithMeal item) async {
+  Future<void> _deleteLog(BuildContext context, LogWithDetails item) async {
     final repo = await ref.read(mealLogRepositoryProvider.future);
     final backup = LogItemsCompanion(
       id: dr.Value(item.log.id),
       mealId: dr.Value(item.log.mealId),
-      date: dr.Value(item.log.date),
-      time: dr.Value(item.log.time),
-      mealType: dr.Value(item.log.mealType),
+      loggedAtLocal: dr.Value(item.log.loggedAtLocal),
+      mealTypeId: dr.Value(item.log.mealTypeId),
     );
     await repo.deleteLog(item.log.id);
     if (!mounted) return;
@@ -47,6 +47,12 @@ class _LogsScreenState extends ConsumerState<LogsScreen>
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Logs'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.label),
+              onPressed: () => context.go('/logs/types'),
+            )
+          ],
           bottom: const TabBar(tabs: [
             Tab(text: 'List'),
             Tab(text: 'Calendar'),
@@ -70,15 +76,41 @@ class _LogsScreenState extends ConsumerState<LogsScreen>
                   itemCount: logs.length,
                   itemBuilder: (context, index) {
                     final item = logs[index];
-                    return ListTile(
-                      title: Text(item.meal.name ?? 'Meal ${item.meal.id}'),
-                      subtitle: Text(
-                          '${item.log.date} ${item.log.time} · ${item.log.mealType}'),
-                      onTap: () => context.go('/logs/${item.log.id}/edit'),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () => _deleteLog(context, item),
-                      ),
+                    final d = item.log.loggedAtLocal;
+                    final dateStr =
+                        '${d.day.toString().padLeft(2, '0')}-${d.month.toString().padLeft(2, '0')}-${d.year}';
+                    final timeStr =
+                        '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}';
+                    final future = Future<double?>(() async {
+                      final svc =
+                          await ref.read(mealCalculationServiceProvider.future);
+                      final mealDetails =
+                          await ref.read(mealDetailsProvider(item.meal.id).future);
+                      if (mealDetails == null) return null;
+                      final totals = await svc.calculateMealTotals(mealDetails);
+                      final entry = totals.entries
+                          .firstWhere((e) => e.key.name == 'Calories',
+                              orElse: () => null);
+                      return entry?.value;
+                    });
+                    return FutureBuilder<double?>(
+                      future: future,
+                      builder: (context, snapshot) {
+                        final cal = snapshot.data;
+                        final calStr =
+                            cal == null ? '' : ' · ${cal.toStringAsFixed(0)} kcal';
+                        return ListTile(
+                          title:
+                              Text(item.meal.name ?? 'Meal ${item.meal.id}'),
+                          subtitle: Text(
+                              '$dateStr $timeStr · ${item.mealType.name}$calStr'),
+                          onTap: () => context.go('/logs/${item.log.id}/edit'),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () => _deleteLog(context, item),
+                          ),
+                        );
+                      },
                     );
                   },
                 );
@@ -87,47 +119,78 @@ class _LogsScreenState extends ConsumerState<LogsScreen>
               error: (e, st) => Center(child: Text('Error: $e')),
             ),
             // Calendar view
-            Column(
-              children: [
-                CalendarDatePicker(
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime(2100),
-                  initialDate: _selectedDate,
-                  onDateChanged: (d) => setState(() => _selectedDate = d),
-                ),
-                Expanded(
-                  child: logsAsync.when(
-                    data: (logs) {
-                      final filtered = logs
-                          .where((l) =>
-                              l.log.date ==
-                              '${_selectedDate.year.toString().padLeft(4, '0')}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}')
-                          .toList();
-                      if (filtered.isEmpty) {
-                        return const Center(
-                            child: Text('No logs for this day'));
-                      }
-                      return ListView.builder(
-                        itemCount: filtered.length,
-                        itemBuilder: (context, index) {
-                          final item = filtered[index];
-                          return ListTile(
-                            title:
-                                Text(item.meal.name ?? 'Meal ${item.meal.id}'),
-                            subtitle:
-                                Text('${item.log.time} · ${item.log.mealType}'),
-                            onTap: () =>
-                                context.go('/logs/${item.log.id}/edit'),
-                          );
-                        },
-                      );
-                    },
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (e, st) => Center(child: Text('Error: $e')),
-                  ),
-                )
-              ],
+            logsAsync.when(
+              data: (logs) {
+                final events = <DateTime, List<LogWithDetails>>{};
+                for (final l in logs) {
+                  final day = DateTime(
+                      l.log.loggedAtLocal.year,
+                      l.log.loggedAtLocal.month,
+                      l.log.loggedAtLocal.day);
+                  events.putIfAbsent(day, () => []).add(l);
+                }
+                final dayLogs = events[_selectedDate] ?? [];
+                return Column(
+                  children: [
+                    TableCalendar<LogWithDetails>(
+                      firstDay: DateTime(2000),
+                      lastDay: DateTime(2100),
+                      focusedDay: _selectedDate,
+                      startingDayOfWeek: StartingDayOfWeek.monday,
+                      selectedDayPredicate: (d) => isSameDay(d, _selectedDate),
+                      eventLoader: (d) =>
+                          events[DateTime(d.year, d.month, d.day)] ?? [],
+                      onDaySelected: (selected, focused) =>
+                          setState(() => _selectedDate = selected),
+                    ),
+                    Expanded(
+                      child: dayLogs.isEmpty
+                          ? const Center(child: Text('No logs for this day'))
+                          : ListView.builder(
+                              itemCount: dayLogs.length,
+                              itemBuilder: (context, index) {
+                                final item = dayLogs[index];
+                                final d = item.log.loggedAtLocal;
+                                final timeStr =
+                                    '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}';
+                                final future = Future<double?>(() async {
+                                  final svc = await ref
+                                      .read(mealCalculationServiceProvider.future);
+                                  final details = await ref
+                                      .read(mealDetailsProvider(item.meal.id).future);
+                                  if (details == null) return null;
+                                  final totals =
+                                      await svc.calculateMealTotals(details);
+                                  final entry = totals.entries.firstWhere(
+                                      (e) => e.key.name == 'Calories',
+                                      orElse: () => null);
+                                  return entry?.value;
+                                });
+                                return FutureBuilder<double?>(
+                                  future: future,
+                                  builder: (context, snapshot) {
+                                    final cal = snapshot.data;
+                                    final calStr = cal == null
+                                        ? ''
+                                        : ' · ${cal.toStringAsFixed(0)} kcal';
+                                    return ListTile(
+                                      title: Text(item.meal.name ??
+                                          'Meal ${item.meal.id}'),
+                                      subtitle: Text(
+                                          '$timeStr · ${item.mealType.name}$calStr'),
+                                      onTap: () => context
+                                          .go('/logs/${item.log.id}/edit'),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                    )
+                  ],
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, st) => Center(child: Text('Error: $e')),
             ),
           ],
         ),

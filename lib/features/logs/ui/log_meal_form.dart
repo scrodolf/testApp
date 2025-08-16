@@ -16,9 +16,8 @@ class LogMealForm extends ConsumerStatefulWidget {
 
 class _LogMealFormState extends ConsumerState<LogMealForm> {
   int? _selectedMealId;
-  DateTime _date = DateTime.now();
-  TimeOfDay _time = TimeOfDay.now();
-  String _mealType = 'Breakfast';
+  DateTime _loggedAt = DateTime.now();
+  int? _mealTypeId;
 
   @override
   void initState() {
@@ -28,11 +27,8 @@ class _LogMealFormState extends ConsumerState<LogMealForm> {
         if (log != null) {
           setState(() {
             _selectedMealId = log.meal.id;
-            _date = DateTime.parse(log.log.date);
-            final parts = log.log.time.split(':');
-            _time = TimeOfDay(
-                hour: int.parse(parts[0]), minute: int.parse(parts[1]));
-            _mealType = log.log.mealType;
+            _loggedAt = log.log.loggedAtLocal;
+            _mealTypeId = log.mealType.id;
           });
         }
       });
@@ -42,33 +38,35 @@ class _LogMealFormState extends ConsumerState<LogMealForm> {
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: _date,
+      initialDate: _loggedAt,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
-    if (picked != null) setState(() => _date = picked);
+    if (picked != null) {
+      final time = TimeOfDay.fromDateTime(_loggedAt);
+      setState(() => _loggedAt =
+          DateTime(picked.year, picked.month, picked.day, time.hour, time.minute));
+    }
   }
 
   Future<void> _pickTime() async {
     final picked = await showTimePicker(
       context: context,
-      initialTime: _time,
+      initialTime: TimeOfDay.fromDateTime(_loggedAt),
     );
-    if (picked != null) setState(() => _time = picked);
+    if (picked != null) {
+      setState(() => _loggedAt = DateTime(_loggedAt.year, _loggedAt.month,
+          _loggedAt.day, picked.hour, picked.minute));
+    }
   }
 
   Future<void> _submit() async {
     final controller = ref.read(logMealControllerProvider.notifier);
-    final dateStr =
-        '${_date.year.toString().padLeft(4, '0')}-${_date.month.toString().padLeft(2, '0')}-${_date.day.toString().padLeft(2, '0')}';
-    final timeStr =
-        '${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}';
     await controller.saveLog(
       id: widget.logId,
       mealId: _selectedMealId!,
-      date: dateStr,
-      time: timeStr,
-      mealType: _mealType,
+      loggedAtLocal: _loggedAt,
+      mealTypeId: _mealTypeId!,
     );
     if (mounted) Navigator.of(context).pop();
   }
@@ -76,6 +74,7 @@ class _LogMealFormState extends ConsumerState<LogMealForm> {
   @override
   Widget build(BuildContext context) {
     final mealsAsync = ref.watch(allMealsProvider);
+    final mealTypesAsync = ref.watch(allMealTypesProvider);
     final state = ref.watch(logMealControllerProvider);
     return Scaffold(
       appBar:
@@ -102,29 +101,37 @@ class _LogMealFormState extends ConsumerState<LogMealForm> {
                 children: [
                   Expanded(
                     child: Text(
-                        'Date: ${_date.day.toString().padLeft(2, '0')}-${_date.month.toString().padLeft(2, '0')}-${_date.year}'),
+                        'Date: ${_loggedAt.day.toString().padLeft(2, '0')}-${_loggedAt.month.toString().padLeft(2, '0')}-${_loggedAt.year}'),
                   ),
                   TextButton(onPressed: _pickDate, child: const Text('Pick')),
                 ],
               ),
               Row(
                 children: [
-                  Expanded(child: Text('Time: ${_time.format(context)}')),
+                  Expanded(
+                      child: Text(
+                          'Time: ${_loggedAt.hour.toString().padLeft(2, '0')}:${_loggedAt.minute.toString().padLeft(2, '0')}')),
                   TextButton(onPressed: _pickTime, child: const Text('Pick')),
                 ],
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: _mealType,
-                decoration: const InputDecoration(labelText: 'Meal Type'),
-                items: const [
-                  DropdownMenuItem(
-                      value: 'Breakfast', child: Text('Breakfast')),
-                  DropdownMenuItem(value: 'Lunch', child: Text('Lunch')),
-                  DropdownMenuItem(value: 'Dinner', child: Text('Dinner')),
-                  DropdownMenuItem(value: 'Snack', child: Text('Snack')),
-                ],
-                onChanged: (v) => setState(() => _mealType = v!),
+              mealTypesAsync.when(
+                data: (types) {
+                  if (_mealTypeId == null && types.isNotEmpty) {
+                    _mealTypeId = types.first.id;
+                  }
+                  return DropdownButtonFormField<int>(
+                    value: _mealTypeId,
+                    decoration: const InputDecoration(labelText: 'Meal Type'),
+                    items: [
+                      for (final t in types)
+                        DropdownMenuItem(value: t.id, child: Text(t.name)),
+                    ],
+                    onChanged: (v) => setState(() => _mealTypeId = v),
+                  );
+                },
+                loading: () => const CircularProgressIndicator(),
+                error: (e, st) => Text('Error: $e'),
               ),
               const SizedBox(height: 24),
               ElevatedButton(

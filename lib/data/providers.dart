@@ -7,13 +7,16 @@ import 'package:food_app/core/unit_registry/unit_registry_interface.dart';
 import 'package:food_app/data/daos/product_dao.dart';
 import 'package:food_app/data/daos/meal_dao.dart';
 import 'package:food_app/data/daos/meal_log_dao.dart';
+import 'package:food_app/data/daos/meal_type_dao.dart';
 import 'package:food_app/data/database/app_database.dart';
 import 'package:food_app/data/repositories/product_repository_impl.dart';
 import 'package:food_app/data/repositories/meal_repository_impl.dart';
 import 'package:food_app/data/repositories/meal_log_repository_impl.dart';
+import 'package:food_app/data/repositories/meal_type_repository_impl.dart';
 import 'package:food_app/domain/repositories/i_product_repository.dart';
 import 'package:food_app/domain/repositories/i_meal_repository.dart';
 import 'package:food_app/domain/repositories/i_meal_log_repository.dart';
+import 'package:food_app/domain/repositories/i_meal_type_repository.dart';
 import 'package:food_app/utils/date_time_utils.dart';
 import 'package:food_app/features/meals/services/meal_calculation_service.dart';
 
@@ -81,11 +84,24 @@ final mealLogDaoProvider = FutureProvider<MealLogDao>((ref) async {
   return MealLogDao(db);
 });
 
+/// Provider for [MealTypeDao].
+final mealTypeDaoProvider = FutureProvider<MealTypeDao>((ref) async {
+  final db = await ref.watch(appDatabaseProvider.future);
+  return MealTypeDao(db);
+});
+
 /// Provider for the meal log repository.
 final mealLogRepositoryProvider =
     FutureProvider<IMealLogRepository>((ref) async {
   final dao = await ref.watch(mealLogDaoProvider.future);
   return MealLogRepositoryImpl(dao);
+});
+
+/// Provider for the meal type repository.
+final mealTypeRepositoryProvider =
+    FutureProvider<IMealTypeRepository>((ref) async {
+  final dao = await ref.watch(mealTypeDaoProvider.future);
+  return MealTypeRepositoryImpl(dao);
 });
 
 /// Stream provider emitting all meals with their details.
@@ -95,16 +111,22 @@ final allMealsProvider = StreamProvider<List<MealWithDetails>>((ref) async* {
 });
 
 /// Stream provider emitting all logged meals.
-final allMealLogsProvider = StreamProvider<List<LogWithMeal>>((ref) async* {
+final allMealLogsProvider = StreamProvider<List<LogWithDetails>>((ref) async* {
   final repo = await ref.watch(mealLogRepositoryProvider.future);
   yield* repo.watchAllLogs();
 });
 
 /// Watches a single log entry by id.
 final logDetailsProvider =
-    StreamProvider.family<LogWithMeal?, int>((ref, id) async* {
+    StreamProvider.family<LogWithDetails?, int>((ref, id) async* {
   final repo = await ref.watch(mealLogRepositoryProvider.future);
   yield* repo.watchLogById(id);
+});
+
+/// Stream provider emitting all meal types.
+final allMealTypesProvider = StreamProvider<List<MealType>>((ref) async* {
+  final repo = await ref.watch(mealTypeRepositoryProvider.future);
+  yield* repo.watchAllTypes();
 });
 
 /// Provides detailed information for a single meal.

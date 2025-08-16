@@ -17,6 +17,7 @@ part 'app_database.g.dart';
   Meals,
   MealEntries,
   MealCategoryValues,
+  MealTypes,
   LogItems
 ])
 class AppDatabase extends _$AppDatabase {
@@ -172,12 +173,17 @@ class LogItems extends Table {
   /// Associated meal reference.
   IntColumn get mealId => integer().references(Meals, #id)();
 
-  /// Logged date in `yyyy-MM-dd` format.
-  TextColumn get date => text()();
+  /// Date and time when the meal was consumed, stored in local time.
+  DateTimeColumn get loggedAtLocal => dateTime()();
 
-  /// Logged time in `HH:mm` format.
-  TextColumn get time => text()();
+  /// Reference to the meal type (Breakfast, Lunch, ...).
+  IntColumn get mealTypeId => integer().references(MealTypes, #id)();
+}
 
-  /// Meal type such as Breakfast/Lunch/Dinner.
-  TextColumn get mealType => text()();
+/// User definable meal types such as Breakfast or Snack.
+class MealTypes extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  /// Human readable meal type name.
+  TextColumn get name => text()();
 }

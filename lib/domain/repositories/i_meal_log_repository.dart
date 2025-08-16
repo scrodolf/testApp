@@ -3,8 +3,8 @@ import 'package:food_app/data/database/app_database.dart';
 
 /// Abstraction for accessing meal log data.
 abstract class IMealLogRepository {
-  Stream<List<LogWithMeal>> watchAllLogs();
-  Stream<LogWithMeal?> watchLogById(int id);
+  Stream<List<LogWithDetails>> watchAllLogs();
+  Stream<LogWithDetails?> watchLogById(int id);
   Future<int> insertLog(LogItemsCompanion log);
   Future<void> updateLog(LogItemsCompanion log);
   Future<void> deleteLog(int id);

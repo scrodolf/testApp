@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import '../features/logs/ui/logs_screen.dart';
 import '../features/logs/ui/log_meal_form.dart';
+import '../features/logs/ui/meal_type_manager_screen.dart';
 import '../features/meals/ui/meals_list_screen.dart';
 import '../features/meals/ui/create_meal_form.dart';
 import '../features/meals/ui/meal_details_screen.dart';
@@ -33,6 +34,10 @@ final GoRouter appRouter = GoRouter(
                   path: ':id/edit',
                   builder: (context, state) => LogMealForm(
                       logId: int.parse(state.pathParameters['id']!)),
+                ),
+                GoRoute(
+                  path: 'types',
+                  builder: (context, state) => const MealTypeManagerScreen(),
                 ),
               ],
             ),
