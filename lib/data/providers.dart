@@ -5,9 +5,18 @@ import 'package:food_app/core/exceptions/app_exceptions.dart';
 import 'package:food_app/core/unit_registry/unit_registry_impl.dart';
 import 'package:food_app/core/unit_registry/unit_registry_interface.dart';
 import 'package:food_app/data/daos/product_dao.dart';
+import 'package:food_app/data/daos/log_dao.dart';
+import 'package:food_app/data/daos/meal_type_dao.dart';
+import 'package:food_app/data/daos/goal_dao.dart';
 import 'package:food_app/data/database/app_database.dart';
 import 'package:food_app/data/repositories/product_repository_impl.dart';
+import 'package:food_app/data/repositories/log_repository_impl.dart';
+import 'package:food_app/data/repositories/meal_type_repository_impl.dart';
+import 'package:food_app/data/repositories/goal_repository_impl.dart';
 import 'package:food_app/domain/repositories/i_product_repository.dart';
+import 'package:food_app/domain/repositories/i_log_repository.dart';
+import 'package:food_app/domain/repositories/i_meal_type_repository.dart';
+import 'package:food_app/domain/repositories/i_goal_repository.dart';
 import 'package:food_app/utils/date_time_utils.dart';
 
 /// Provides a lazily opened [AppDatabase] instance.
@@ -57,6 +66,74 @@ final allProductsProvider =
     StreamProvider<List<ProductWithDetails>>((ref) async* {
   final repo = await ref.watch(productRepositoryProvider.future);
   yield* repo.watchAllProducts();
+});
+
+/// Provider for [MealTypeDao] with default seed values.
+final mealTypeDaoProvider = FutureProvider<MealTypeDao>((ref) async {
+  final db = await ref.watch(appDatabaseProvider.future);
+  final existing = await db.select(db.mealTypes).get();
+  if (existing.isEmpty) {
+    await db.batch((batch) {
+      batch.insertAll(db.mealTypes, [
+        MealTypesCompanion(
+            name: const Value('Breakfast'), isCustom: const Value(false)),
+        MealTypesCompanion(
+            name: const Value('Lunch'), isCustom: const Value(false)),
+        MealTypesCompanion(
+            name: const Value('Dinner'), isCustom: const Value(false)),
+      ]);
+    });
+  }
+  return MealTypeDao(db);
+});
+
+/// Provider for [LogDao].
+final logDaoProvider = FutureProvider<LogDao>((ref) async {
+  final db = await ref.watch(appDatabaseProvider.future);
+  return LogDao(db);
+});
+
+/// Repository provider for meal types.
+final mealTypeRepositoryProvider =
+    FutureProvider<IMealTypeRepository>((ref) async {
+  final dao = await ref.watch(mealTypeDaoProvider.future);
+  return MealTypeRepositoryImpl(dao);
+});
+
+/// Repository provider for logs.
+final logRepositoryProvider = FutureProvider<ILogRepository>((ref) async {
+  final dao = await ref.watch(logDaoProvider.future);
+  return LogRepositoryImpl(dao);
+});
+
+/// Provider for [GoalDao].
+final goalDaoProvider = FutureProvider<GoalDao>((ref) async {
+  final db = await ref.watch(appDatabaseProvider.future);
+  return GoalDao(db);
+});
+
+/// Repository provider for goals.
+final goalRepositoryProvider = FutureProvider<IGoalRepository>((ref) async {
+  final dao = await ref.watch(goalDaoProvider.future);
+  return GoalRepositoryImpl(dao);
+});
+
+/// Stream provider emitting all meal types.
+final allMealTypesProvider = StreamProvider<List<MealType>>((ref) async* {
+  final repo = await ref.watch(mealTypeRepositoryProvider.future);
+  yield* repo.watchMealTypes();
+});
+
+/// Stream provider emitting all logs.
+final allLogsProvider = StreamProvider<List<LogWithDetails>>((ref) async* {
+  final repo = await ref.watch(logRepositoryProvider.future);
+  yield* repo.watchLogs();
+});
+
+/// Stream provider emitting all goals.
+final allGoalsProvider = StreamProvider<List<GoalWithDetails>>((ref) async* {
+  final repo = await ref.watch(goalRepositoryProvider.future);
+  yield* repo.watchGoals();
 });
 
 /// Provider for the unit registry service.
