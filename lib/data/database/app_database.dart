@@ -7,13 +7,32 @@ import 'package:path_provider/path_provider.dart';
 
 part 'app_database.g.dart';
 
+/// Period covered by a nutritional goal.
+enum GoalPeriod { weekly, monthly }
+
+/// How exceeding a goal is interpreted.
+enum GoalDisposition { good, bad, mixed }
+
+/// Severity indicator when a goal is exceeded.
+enum GoalImpactLevel { mild, moderate, severe }
+
 /// Provides access to the local SQLite database using Drift.
-@DriftDatabase(tables: [Units, Products, Categories, ProductCategoryValues])
+@DriftDatabase(
+    tables: [
+  Units,
+  Products,
+  Categories,
+  ProductCategoryValues,
+  Meals,
+  MealTypes,
+  Logs,
+  Goals
+])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 }
 
 /// Opens a connection to the database stored in the application's documents
@@ -95,4 +114,60 @@ class ProductCategoryValues extends Table {
 
   /// Measurement unit originally used when entering [value].
   IntColumn get unitId => integer().references(Units, #id)();
+}
+
+/// Stores user-composed meals.
+class Meals extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  /// Name of the meal.
+  TextColumn get name => text()();
+}
+
+/// Stores meal types like breakfast or dinner. Users can customise these.
+class MealTypes extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  /// Display name for the meal type.
+  TextColumn get name => text()();
+
+  /// Whether the type was user defined.
+  BoolColumn get isCustom => boolean().withDefault(const Constant(true))();
+}
+
+/// Logs link a meal to a date/time and optional meal type.
+class Logs extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  /// Associated meal identifier.
+  IntColumn get mealId => integer().references(Meals, #id)();
+
+  /// Date and time the meal was consumed in local time.
+  DateTimeColumn get loggedAtLocal => dateTime()();
+
+  /// Optional meal type tag.
+  IntColumn get mealTypeId => integer().nullable().references(MealTypes, #id)();
+}
+
+/// Stores nutritional goals for weekly or monthly periods.
+class Goals extends Table {
+  IntColumn get id => integer().autoIncrement()();
+
+  /// Related category the goal targets.
+  IntColumn get categoryId => integer().references(Categories, #id)();
+
+  /// Period for which the goal applies.
+  TextColumn get period => textEnum<GoalPeriod>()();
+
+  /// Cap value in the unit's base dimension.
+  RealColumn get capValue => real()();
+
+  /// Unit used to display and input the goal value.
+  IntColumn get unitId => integer().references(Units, #id)();
+
+  /// Interpretation of exceeding the goal.
+  TextColumn get disposition => textEnum<GoalDisposition>()();
+
+  /// Severity when the goal is exceeded.
+  TextColumn get impact => textEnum<GoalImpactLevel>()();
 }
