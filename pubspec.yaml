@@ -1,15 +1,25 @@
-name: food_tracker
-description: A cross-platform Food Tracker using local storage.
+name: food_app
+description: A foundational UI for the Food App.
 version: 0.1.0
 
 environment:
-  sdk: "^2.12.0"
+  sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  hive: ^2.0.0
-  hive_flutter: ^1.1.0
+  go_router: ^14.1.4
+  flutter_riverpod: ^2.5.1
+  drift: ^2.14.1
+  path_provider: ^2.1.2
+  sqlite3_flutter_libs: ^0.5.20
+  intl: ^0.18.1
+  fl_chart: ^0.68.0
+
+dev_dependencies:
+  flutter_lints: ^3.0.0
+  drift_dev: ^2.14.1
+  build_runner: ^2.4.6
 
 flutter:
   uses-material-design: true
