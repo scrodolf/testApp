@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:food_app/core/conversion_service/conversion_service_interface.dart';
 import 'package:food_app/data/database/app_database.dart';
 import 'package:food_app/domain/models/parsed_product_data.dart';
@@ -17,11 +16,15 @@ class NutritionTextParser {
     String rawText, {
     required List<Category> availableCategories,
     required List<Unit> availableUnits,
-    int? productIdForOverrides,
+    String? productIdForOverrides,
   }) async {
-    final lines = rawText.split(RegExp(r'\\r?\\n'));
+    // Split the incoming text into separate logical lines.  Many labels use
+    // Windows line endings, hence the \r?\n pattern.  Using a raw string keeps
+    // the backslashes readable.
+    final lines = rawText.split(RegExp(r'\r?\n'));
     final categoriesByName = _buildCategoryLookup(availableCategories);
     final unitsByToken = _buildUnitLookup(availableUnits);
+    final productId = int.tryParse(productIdForOverrides ?? '');
 
     String? name;
     double? servingSize;
@@ -30,14 +33,16 @@ class NutritionTextParser {
     final unrecognized = <String>[];
     final errors = <String>[];
 
+    // Regular expressions to capture the various components.  Units may contain
+    // spaces (e.g. "fl oz"), so the pattern allows for whitespace.
     final productReg =
-        RegExp(r'^\\s*Product:\\s*(.+)\\$', caseSensitive: false);
+        RegExp(r'^\s*Product:\s*(.+)$', caseSensitive: false);
     final servingReg = RegExp(
-      r'^(?:Serving Size|per)[:]?\\s*([\\d.,]+)\\s*([a-zA-Zµ]+)',
+      r'^(?:Serving Size|per)[:]?\s*([\d.,]+)\s*([a-zA-Zµ ]+)',
       caseSensitive: false,
     );
     final valueReg = RegExp(
-      r'^([^:]+):\\s*([\\d.,]+)\\s*([a-zA-Zµ]+)',
+      r'^([^:]+):\s*([\d.,]+)\s*([a-zA-Zµ ]+)',
       caseSensitive: false,
     );
 
@@ -55,13 +60,13 @@ class NutritionTextParser {
       if (servingMatch != null) {
         final amount =
             double.tryParse(servingMatch.group(1)!.replaceAll(',', '.'));
-        final unitToken = servingMatch.group(2)!.toLowerCase();
+        final unitToken = _normaliseUnitToken(servingMatch.group(2)!);
         final unit = unitsByToken[unitToken];
         if (amount != null && unit != null) {
           final base = await _conversion.toBase(
             amount,
             unit,
-            productId: productIdForOverrides,
+            productId: productId,
           );
           servingSize = double.parse(base.toStringAsFixed(4));
           servingUnit = _findBaseUnit(unit, availableUnits);
@@ -73,9 +78,9 @@ class NutritionTextParser {
 
       final valueMatch = valueReg.firstMatch(trimmed);
       if (valueMatch != null) {
-        final label = valueMatch.group(1)!.trim().toLowerCase();
+        final label = _normaliseLabel(valueMatch.group(1)!);
         final valueToken = valueMatch.group(2)!.replaceAll(',', '.');
-        final unitToken = valueMatch.group(3)!.toLowerCase();
+        final unitToken = _normaliseUnitToken(valueMatch.group(3)!);
         final parsedValue = double.tryParse(valueToken);
         final category = categoriesByName[label];
         final unit = unitsByToken[unitToken];
@@ -83,7 +88,7 @@ class NutritionTextParser {
           final base = await _conversion.toBase(
             parsedValue,
             unit,
-            productId: productIdForOverrides,
+            productId: productId,
           );
           final baseUnit = _findBaseUnit(unit, availableUnits);
           categoryValues[category.id] = ParsedCategoryValue(
@@ -115,21 +120,22 @@ class NutritionTextParser {
   Map<String, Category> _buildCategoryLookup(List<Category> categories) {
     final map = <String, Category>{};
     for (final c in categories) {
-      final key = c.name.toLowerCase();
+      final key = _normaliseLabel(c.name);
       map[key] = c;
       switch (key) {
         case 'fat':
-          map['total fat'] = c;
+          map[_normaliseLabel('total fat')] = c;
           break;
         case 'carbs':
-          map['carbohydrates'] = c;
+          map[_normaliseLabel('carbohydrate')] = c;
+          map[_normaliseLabel('carbohydrates')] = c;
           break;
         case 'fiber':
-          map['fibre'] = c;
-          map['dietary fiber'] = c;
+          map[_normaliseLabel('fibre')] = c;
+          map[_normaliseLabel('dietary fiber')] = c;
           break;
         case 'calories':
-          map['energy'] = c;
+          map[_normaliseLabel('energy')] = c;
           break;
       }
     }
@@ -139,10 +145,19 @@ class NutritionTextParser {
   Map<String, Unit> _buildUnitLookup(List<Unit> units) {
     final map = <String, Unit>{};
     for (final u in units) {
-      map[u.name.toLowerCase()] = u;
-      final symbol = u.symbol?.toLowerCase();
+      final name = _normaliseUnitToken(u.name);
+      map[name] = u;
+      map['${name}s'] = u; // plural form
+      final symbol = u.symbol;
       if (symbol != null) {
-        map[symbol] = u;
+        final sym = _normaliseUnitToken(symbol);
+        map[sym] = u;
+        map['${sym}s'] = u; // plural symbol
+        if (sym == 'µg') {
+          // Common textual alternatives for micrograms.
+          map['mcg'] = u;
+          map['ug'] = u;
+        }
       }
     }
     return map;
@@ -154,5 +169,13 @@ class NutritionTextParser {
       orElse: () => unit,
     );
   }
+
+  /// Normalises a category label for consistent lookup.
+  String _normaliseLabel(String input) =>
+      input.toLowerCase().replaceAll(RegExp(r'[^a-z0-9 ]'), '').trim();
+
+  /// Normalises a unit token (symbol or name) to ease lookup.
+  String _normaliseUnitToken(String input) =>
+      input.toLowerCase().replaceAll(RegExp(r'[^a-zµ]'), '');
 }
 
