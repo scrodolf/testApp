@@ -32,6 +32,7 @@ A foundational Flutter project showcasing the basic UI layout for a future food 
 - Optional detailed vitamin tracking mode.
 - Debug option to seed sample products, meals and logs.
 - Paste raw nutritional text and have products auto-filled.
+- Paste goal definitions and chart requests to auto-create goals or generate statistics visuals.
 
 ## Building
 - **Debug APK**
