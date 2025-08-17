@@ -26,7 +26,7 @@ class MealTypeManagerScreen extends ConsumerWidget {
     );
     if (result != null && result.isNotEmpty) {
       final repo = await ref.read(mealTypeRepositoryProvider.future);
-      await repo.insertMealType(name: result, isCustom: true);
+      await repo.insertMealType(name: result, isBuiltin: false);
     }
   }
 
@@ -65,17 +65,17 @@ class MealTypeManagerScreen extends ConsumerWidget {
                         onPressed: () {
                           ref
                               .read(mealTypeRepositoryProvider.future)
-                              .then((repo) => repo.insertMealType(
-                                  name: t.name, isCustom: t.isCustom));
+                      .then((repo) => repo.insertMealType(
+                                  name: t.nameKey, isBuiltin: t.isBuiltin));
                         },
                       ),
                     ),
                   );
                 },
                 child: ListTile(
-                  title: Text(t.name),
+                  title: Text(t.nameKey),
                   onTap: () async {
-                    final controller = TextEditingController(text: t.name);
+                    final controller = TextEditingController(text: t.nameKey);
                     final newName = await showDialog<String>(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -96,7 +96,7 @@ class MealTypeManagerScreen extends ConsumerWidget {
                       final repo =
                           await ref.read(mealTypeRepositoryProvider.future);
                       await repo.updateMealType(
-                          id: t.id, name: newName, isCustom: t.isCustom);
+                          id: t.id, name: newName, isBuiltin: t.isBuiltin);
                     }
                   },
                 ),
