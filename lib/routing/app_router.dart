@@ -4,7 +4,12 @@ import '../features/meals/ui/meals_screen.dart';
 import '../features/products/ui/product_list_screen.dart';
 import '../features/products/ui/add_product_form.dart';
 import '../features/statistics/ui/statistics_screen.dart';
-import '../features/settings/ui/settings_screen.dart';
+import '../settings/settings_screen.dart';
+import '../settings/custom_units_screen.dart';
+import '../settings/meal_types_screen.dart';
+import '../settings/experimental/qr_scanner_screen.dart';
+import '../settings/experimental/export_import_screen.dart';
+import '../settings/debug_sample_data_screen.dart';
 import '../widgets/app_scaffold.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -57,6 +62,31 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: '/settings',
               builder: (context, state) => const SettingsScreen(),
+              routes: [
+                GoRoute(
+                  path: 'units',
+                  builder: (context, state) => const CustomUnitsScreen(),
+                ),
+                GoRoute(
+                  path: 'meal-types',
+                  builder: (context, state) => const MealTypesScreen(),
+                ),
+                GoRoute(
+                  path: 'experimental/qr',
+                  builder: (context, state) =>
+                      const QrScannerPlaceholderScreen(),
+                ),
+                GoRoute(
+                  path: 'experimental/export',
+                  builder: (context, state) =>
+                      const ExportImportPlaceholderScreen(),
+                ),
+                GoRoute(
+                  path: 'debug/sample-data',
+                  builder: (context, state) =>
+                      const DebugSampleDataScreen(),
+                ),
+              ],
             ),
           ],
         ),
