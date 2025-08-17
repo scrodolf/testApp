@@ -30,6 +30,7 @@ A foundational Flutter project showcasing the basic UI layout for a future food 
 - Experimental placeholders for QR code scanning and JSON data export/import.
 - Optional detailed vitamin tracking mode.
 
+
 ## Building
 - **Debug APK**
   ```bash

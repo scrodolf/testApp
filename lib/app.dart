@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'routing/app_router.dart';
 import 'features/settings/providers.dart';
+=======
+import 'settings/providers.dart';
 
 class FoodApp extends ConsumerWidget {
   const FoodApp({super.key});
@@ -9,6 +11,8 @@ class FoodApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mode = ref.watch(themeModeProvider).value ?? ThemeMode.system;
+=======
+    final mode = ref.watch(themeModeProvider);
     return MaterialApp.router(
       title: 'Food App',
       routerConfig: appRouter,
