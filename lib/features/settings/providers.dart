@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:food_app/data/providers.dart';
 import 'package:food_app/data/database/app_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:food_app/core/unit_system.dart';
+=======
 
 /// Exposes a singleton [SharedPreferences] instance.
 final sharedPrefsProvider =
@@ -29,6 +31,28 @@ class ThemeModeNotifier extends AsyncNotifier<ThemeMode> {
   }
 }
 
+/// Preferred measurement system (metric or imperial).
+final unitSystemProvider =
+    AsyncNotifierProvider<UnitSystemNotifier, UnitSystem>(UnitSystemNotifier.new);
+
+class UnitSystemNotifier extends AsyncNotifier<UnitSystem> {
+  late SharedPreferences _prefs;
+
+  @override
+  Future<UnitSystem> build() async {
+    _prefs = await ref.watch(sharedPrefsProvider.future);
+    final saved = _prefs.getString('unitSystem');
+    return UnitSystem.values
+        .firstWhere((u) => u.name == saved, orElse: () => UnitSystem.metric);
+  }
+
+  Future<void> setSystem(UnitSystem system) async {
+    state = AsyncData(system);
+    await _prefs.setString('unitSystem', system.name);
+  }
+}
+
+=======
 /// Toggle for detailed vitamin tracking; stored in [SharedPreferences].
 final vitaminsModeProvider = AsyncNotifierProvider<VitaminsModeNotifier, bool>(
     VitaminsModeNotifier.new);

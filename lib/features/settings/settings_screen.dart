@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'providers.dart';
+import 'package:food_app/core/unit_system.dart';
+=======
 
 /// Root settings screen offering navigation to specific configuration areas.
 class SettingsScreen extends ConsumerWidget {
@@ -12,6 +14,9 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider).value ?? ThemeMode.system;
+    final unitSystem =
+        ref.watch(unitSystemProvider).value ?? UnitSystem.metric;
+=======
     final vitaminsSpecific = ref.watch(vitaminsModeProvider).value ?? false;
 
     return Scaffold(
@@ -31,6 +36,20 @@ class SettingsScreen extends ConsumerWidget {
               }
             },
           ),
+          ListTile(
+            title: const Text('Unit system'),
+            subtitle: Text(unitSystem.name),
+            onTap: () async {
+              final system = await showDialog<UnitSystem>(
+                context: context,
+                builder: (context) => _UnitSystemDialog(current: unitSystem),
+              );
+              if (system != null) {
+                ref.read(unitSystemProvider.notifier).setSystem(system);
+              }
+            },
+          ),
+=======
           SwitchListTile(
             title: const Text('Specific vitamin list'),
             subtitle: const Text('Otherwise use generic bucket'),
@@ -93,6 +112,27 @@ class _ThemeDialog extends StatelessWidget {
   }
 }
 
+class _UnitSystemDialog extends StatelessWidget {
+  const _UnitSystemDialog({required this.current});
+  final UnitSystem current;
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      title: const Text('Select unit system'),
+      children: UnitSystem.values
+          .map((u) => RadioListTile<UnitSystem>(
+                title: Text(u.name),
+                value: u,
+                groupValue: current,
+                onChanged: (val) => Navigator.pop(context, val),
+              ))
+          .toList(),
+    );
+  }
+}
+
+=======
 class _ExperimentalTile extends ConsumerStatefulWidget {
   const _ExperimentalTile(
       {required this.title, required this.route, required this.prefKey});

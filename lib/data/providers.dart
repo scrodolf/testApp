@@ -18,6 +18,10 @@ import 'package:food_app/domain/repositories/i_log_repository.dart';
 import 'package:food_app/domain/repositories/i_meal_type_repository.dart';
 import 'package:food_app/domain/repositories/i_goal_repository.dart';
 import 'package:food_app/utils/date_time_utils.dart';
+import 'package:food_app/data/services/nutrition_text_parser.dart';
+import 'package:food_app/core/services/text_parsing_service.dart';
+import 'package:food_app/domain/use_cases/create_goal_from_parsed_text_use_case.dart';
+import 'package:food_app/domain/use_cases/generate_chart_config_from_parsed_text_use_case.dart';
 
 /// Provides a lazily opened [AppDatabase] instance.
 final appDatabaseProvider = FutureProvider<AppDatabase>((ref) async {
@@ -169,6 +173,13 @@ final conversionServiceProvider =
   }
 });
 
+/// Parser turning pasted nutritional text into structured product data.
+final nutritionTextParserProvider =
+    FutureProvider<NutritionTextParser>((ref) async {
+  final conversion = await ref.watch(conversionServiceProvider.future);
+  return NutritionTextParser(conversion);
+});
+
 /// Provider for date/time utilities.
 final dateTimeUtilsProvider = Provider<DateTimeUtils>((ref) {
   try {
@@ -176,4 +187,25 @@ final dateTimeUtilsProvider = Provider<DateTimeUtils>((ref) {
   } catch (e) {
     throw AppException('Failed to initialise DateTime utilities', e);
   }
+});
+
+/// General text parser for goals and charts.
+final textParsingServiceProvider = FutureProvider<TextParsingService>((ref) async {
+  final conversion = await ref.watch(conversionServiceProvider.future);
+  return TextParsingService(conversion);
+});
+
+/// Use case to create a goal from pasted text.
+final createGoalFromParsedTextUseCaseProvider =
+    FutureProvider<CreateGoalFromParsedTextUseCase>((ref) async {
+  final parser = await ref.watch(textParsingServiceProvider.future);
+  final repo = await ref.watch(goalRepositoryProvider.future);
+  return CreateGoalFromParsedTextUseCase(parser, repo);
+});
+
+/// Use case to generate chart configuration from pasted text.
+final generateChartConfigFromParsedTextUseCaseProvider =
+    FutureProvider<GenerateChartConfigFromParsedTextUseCase>((ref) async {
+  final parser = await ref.watch(textParsingServiceProvider.future);
+  return GenerateChartConfigFromParsedTextUseCase(parser);
 });
