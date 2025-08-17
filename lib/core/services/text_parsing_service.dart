@@ -6,7 +6,7 @@ import 'package:food_app/domain/models/goal_data_dto.dart';
 
 /// Parses free-form user text into structured domain objects.
 class TextParsingService {
-  final ConversionService conversionService;
+  final IConversionService conversionService;
 
   TextParsingService(this.conversionService);
 
@@ -41,29 +41,25 @@ class TextParsingService {
         ? GoalPeriod.weekly
         : GoalPeriod.monthly;
     final categoryName = categoryMatch.group(1)!.trim();
-    final category = availableCategories.firstWhere(
-        (c) => c.name.toLowerCase() == categoryName,
-        orElse: () => Category(
-              id: -1,
-              name: categoryName,
-              dimension: '',
-              isBuiltin: false,
-            ));
-    if (category.id == -1) return null;
+    Category? category;
+    for (final c in availableCategories) {
+      if (c.name.toLowerCase() == categoryName) {
+        category = c;
+        break;
+      }
+    }
+    if (category == null) return null;
 
     final value = double.parse(valueMatch.group(1)!);
     final unitSymbol = valueMatch.group(2)!.trim();
-    final unit = availableUnits.firstWhere(
-        (u) => u.symbol.toLowerCase() == unitSymbol,
-        orElse: () => Unit(
-              id: -1,
-              name: unitSymbol,
-              symbol: unitSymbol,
-              dimension: '',
-              factorToBase: 1,
-              isCustom: false,
-            ));
-    if (unit.id == -1) return null;
+    Unit? unit;
+    for (final u in availableUnits) {
+      if ((u.symbol ?? u.name).toLowerCase() == unitSymbol) {
+        unit = u;
+        break;
+      }
+    }
+    if (unit == null) return null;
 
     final capValueInBase = await conversionService.toBase(value, unit);
 

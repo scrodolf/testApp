@@ -21,16 +21,23 @@ class _FakeConversionService implements IConversionService {
 void main() {
   final service = TextParsingService(_FakeConversionService());
   final categories = [
-    Category(id: 1, name: 'protein', dimension: 'mass', isBuiltin: true)
+    Category(
+      id: 1,
+      name: 'protein',
+      baseDimension: 'mass',
+      defaultDisplayUnitId: 1,
+      isCustom: false,
+    )
   ];
   final units = [
     Unit(
-        id: 1,
-        name: 'gram',
-        symbol: 'g',
-        dimension: 'mass',
-        factorToBase: 1,
-        isCustom: false)
+      id: 1,
+      name: 'gram',
+      symbol: 'g',
+      dimension: 'mass',
+      factorToBase: 1,
+      isCustom: false,
+    )
   ];
 
   test('parse goal from text', () async {

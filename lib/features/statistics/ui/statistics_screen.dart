@@ -6,6 +6,7 @@ import '../../goals/ui/goal_editor_dialog.dart';
 import '../../shared/widgets/paste_data_dialog.dart';
 import 'weekly_bar_chart.dart';
 import 'monthly_line_chart.dart';
+import 'parsed_bar_chart.dart';
 
 /// Root screen for goals management and statistics visualisation.
 class StatisticsScreen extends ConsumerStatefulWidget {
@@ -90,10 +91,23 @@ class _ChartsOverview extends StatelessWidget {
       ),
     ];
     if (config != null) {
-      children.addAll([
-        const SizedBox(height: 24),
-        Text('Custom chart: ${config!.chartType.name} for ${config!.dataType}')
-      ]);
+      children.add(const SizedBox(height: 24));
+      if (config!.chartType == ChartType.bar) {
+        children.add(
+          SizedBox(
+            height: 200,
+            child: ParsedBarChart(
+              config: config!,
+              values: weeklyValues,
+              cap: 20,
+            ),
+          ),
+        );
+      } else {
+        children.add(
+          Text('Custom chart: ${config!.chartType.name} for ${config!.dataType}'),
+        );
+      }
     }
     return ListView(padding: const EdgeInsets.all(16), children: children);
   }
