@@ -4,12 +4,12 @@ import 'package:food_app/data/database/app_database.dart';
 abstract class IMealTypeRepository {
   Stream<List<MealType>> watchMealTypes();
 
-  Future<int> insertMealType({required String name, bool isCustom});
+  Future<int> insertMealType({required String name, bool isBuiltin});
 
   Future<bool> updateMealType({
     required int id,
     required String name,
-    bool? isCustom,
+    bool? isBuiltin,
   });
 
   Future<void> deleteMealType(int id);
