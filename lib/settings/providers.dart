@@ -47,6 +47,10 @@ class VitaminsModeNotifier extends AsyncNotifier<bool> {
     await _prefs.setBool('vitaminsSpecific', value);
   }
 }
+=======
+
+/// Controls the application's visual theme.
+final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
 
 /// Watches all user defined measurement units.
 final customUnitsProvider = StreamProvider<List<Unit>>((ref) async* {

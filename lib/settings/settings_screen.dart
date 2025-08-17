@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+=======
 import 'providers.dart';
 
 /// Root settings screen offering navigation to specific configuration areas.
@@ -13,6 +14,8 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider).value ?? ThemeMode.system;
     final vitaminsSpecific = ref.watch(vitaminsModeProvider).value ?? false;
+=======
+    final themeMode = ref.watch(themeModeProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
@@ -38,6 +41,11 @@ class SettingsScreen extends ConsumerWidget {
             onChanged: (v) =>
                 ref.read(vitaminsModeProvider.notifier).setEnabled(v),
           ),
+=======
+                ref.read(themeModeProvider.notifier).state = mode;
+              }
+            },
+          ),
           const Divider(),
           ListTile(
             title: const Text('Custom Units'),
@@ -54,11 +62,13 @@ class SettingsScreen extends ConsumerWidget {
             title: 'QR Code Scanning',
             route: '/settings/experimental/qr',
             prefKey: 'featureQr',
+=======
           ),
           _ExperimentalTile(
             title: 'Data Export / Import',
             route: '/settings/experimental/export',
             prefKey: 'featureExport',
+=======
           ),
           if (kDebugMode) ...[
             const Divider(),
@@ -99,6 +109,10 @@ class _ExperimentalTile extends ConsumerStatefulWidget {
   final String title;
   final String route;
   final String prefKey;
+=======
+  const _ExperimentalTile({required this.title, required this.route});
+  final String title;
+  final String route;
 
   @override
   ConsumerState<_ExperimentalTile> createState() => _ExperimentalTileState();
@@ -122,11 +136,17 @@ class _ExperimentalTileState extends ConsumerState<_ExperimentalTile> {
   }
 
   @override
+=======
   Widget build(BuildContext context) {
     return SwitchListTile(
       title: Text(widget.title),
       value: enabled,
       onChanged: _setEnabled,
+=======
+      onChanged: (v) {
+        setState(() => enabled = v);
+        if (v) context.push(widget.route);
+      },
     );
   }
 }

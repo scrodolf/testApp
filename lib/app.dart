@@ -9,6 +9,8 @@ class FoodApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mode = ref.watch(themeModeProvider).value ?? ThemeMode.system;
+=======
+    final mode = ref.watch(themeModeProvider);
     return MaterialApp.router(
       title: 'Food App',
       routerConfig: appRouter,
