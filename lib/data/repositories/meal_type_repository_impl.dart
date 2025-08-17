@@ -13,10 +13,10 @@ class MealTypeRepositoryImpl implements IMealTypeRepository {
   Stream<List<MealType>> watchMealTypes() => _dao.watchAllMealTypes();
 
   @override
-  Future<int> insertMealType({required String name, bool isCustom = true}) {
+  Future<int> insertMealType({required String name, bool isBuiltin = false}) {
     return _dao.insertMealType(MealTypesCompanion(
-      name: Value(name),
-      isCustom: Value(isCustom),
+      nameKey: Value(name),
+      isBuiltin: Value(isBuiltin),
     ));
   }
 
@@ -24,12 +24,12 @@ class MealTypeRepositoryImpl implements IMealTypeRepository {
   Future<bool> updateMealType({
     required int id,
     required String name,
-    bool? isCustom,
+    bool? isBuiltin,
   }) {
     return _dao.updateMealType(MealTypesCompanion(
       id: Value(id),
-      name: Value(name),
-      isCustom: isCustom != null ? Value(isCustom) : const Value.absent(),
+      nameKey: Value(name),
+      isBuiltin: isBuiltin != null ? Value(isBuiltin) : const Value.absent(),
     ));
   }
 
