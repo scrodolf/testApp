@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'routing/app_router.dart';
 import 'features/settings/providers.dart';
 
+import 'settings/providers.dart';
+
 class FoodApp extends ConsumerWidget {
   const FoodApp({super.key});
 
@@ -10,6 +12,9 @@ class FoodApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mode = ref.watch(themeModeProvider).value ?? ThemeMode.system;
     const seed = Color(0xFF58ACFF);
+=======
+=======
+    final mode = ref.watch(themeModeProvider);
     return MaterialApp.router(
       title: 'Food App',
       routerConfig: appRouter,
@@ -24,6 +29,7 @@ class FoodApp extends ConsumerWidget {
             ColorScheme.fromSeed(seedColor: seed, brightness: Brightness.dark),
         useMaterial3: true,
       ),
+=======
       themeMode: mode,
       locale: const Locale('en', 'GB'),
     );

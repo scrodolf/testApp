@@ -33,6 +33,13 @@ A foundational Flutter project showcasing the basic UI layout for a future food 
 - Debug option to seed sample products, meals and logs.
 - Paste raw nutritional text and have products auto-filled.
 - Paste goal definitions and chart requests to auto-create goals or generate statistics visuals.
+=======
+- Manage custom measurement units and convert between metric and imperial systems.
+- Edit the list of meal types (Breakfast, Lunch, Dinner by default).
+- Light/Dark/System theme toggle.
+- Experimental placeholders for QR code scanning and JSON data export/import.
+- Optional detailed vitamin tracking mode.
+
 
 ## Building
 - **Debug APK**
@@ -46,6 +53,7 @@ A foundational Flutter project showcasing the basic UI layout for a future food 
 
 ## Notes
 - Data export/import and QR scanning are stubbed. Enabling them stores a flag in SharedPreferences and opens a placeholder explaining the upcoming JSON backup format or QR-based product entry. QR scanning will request camera permission when opened.
+=======
 - When running for the first time, the database seeds base units (gram, milliliter, kilocalorie) and meal types.
 - If schema changes occur (e.g., after updating Drift tables), run `flutter pub run build_runner build` to regenerate database code.
 

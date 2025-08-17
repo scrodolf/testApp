@@ -4,6 +4,7 @@ import 'package:food_app/data/providers.dart';
 import 'package:food_app/data/database/app_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:food_app/core/unit_system.dart';
+=======
 
 /// Exposes a singleton [SharedPreferences] instance.
 final sharedPrefsProvider =
@@ -51,6 +52,7 @@ class UnitSystemNotifier extends AsyncNotifier<UnitSystem> {
   }
 }
 
+=======
 /// Toggle for detailed vitamin tracking; stored in [SharedPreferences].
 final vitaminsModeProvider = AsyncNotifierProvider<VitaminsModeNotifier, bool>(
     VitaminsModeNotifier.new);
