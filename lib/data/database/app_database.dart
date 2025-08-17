@@ -26,13 +26,15 @@ enum GoalImpactLevel { mild, moderate, severe }
   Meals,
   MealTypes,
   Logs,
-  Goals
+  Goals,
+  ProductUnitOverrides,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  // Incremented to 3 for the extended settings schema.
+  int get schemaVersion => 3;
 }
 
 /// Opens a connection to the database stored in the application's documents
@@ -57,6 +59,9 @@ class Units extends Table {
 
   /// Full name of the unit (e.g. gram).
   TextColumn get name => text()();
+
+  /// Short symbol used for display (e.g. g, mL).
+  TextColumn get symbol => text().nullable()();
 
   /// Dimension this unit belongs to (e.g. mass, volume).
   TextColumn get dimension => text()();
@@ -127,12 +132,15 @@ class Meals extends Table {
 /// Stores meal types like breakfast or dinner. Users can customise these.
 class MealTypes extends Table {
   IntColumn get id => integer().autoIncrement()();
+  
+  /// Localised name key or custom name.
+  TextColumn get nameKey => text()();
 
-  /// Display name for the meal type.
-  TextColumn get name => text()();
+  /// Sort order when displaying.
+  IntColumn get sortOrder => integer().withDefault(const Constant(0))();
 
-  /// Whether the type was user defined.
-  BoolColumn get isCustom => boolean().withDefault(const Constant(true))();
+  /// Whether the meal type is built-in (non-deletable).
+  BoolColumn get isBuiltin => boolean().withDefault(const Constant(false))();
 }
 
 /// Logs link a meal to a date/time and optional meal type.
@@ -170,4 +178,19 @@ class Goals extends Table {
 
   /// Severity when the goal is exceeded.
   TextColumn get impact => textEnum<GoalImpactLevel>()();
+}
+
+/// Per-product overrides allowing user-defined units like "scoop".
+class ProductUnitOverrides extends Table {
+  /// Associated product identifier.
+  IntColumn get productId => integer().references(Products, #id)();
+
+  /// Unit being overridden.
+  IntColumn get unitId => integer().references(Units, #id)();
+
+  /// Factor to convert this unit into the base unit for the product.
+  RealColumn get factorToBase => real()();
+
+  @override
+  Set<Column> get primaryKey => {productId, unitId};
 }

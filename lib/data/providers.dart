@@ -18,6 +18,7 @@ import 'package:food_app/domain/repositories/i_log_repository.dart';
 import 'package:food_app/domain/repositories/i_meal_type_repository.dart';
 import 'package:food_app/domain/repositories/i_goal_repository.dart';
 import 'package:food_app/utils/date_time_utils.dart';
+import 'package:food_app/core/parsers/nutrition_text_parser.dart';
 
 /// Provides a lazily opened [AppDatabase] instance.
 final appDatabaseProvider = FutureProvider<AppDatabase>((ref) async {
@@ -76,11 +77,20 @@ final mealTypeDaoProvider = FutureProvider<MealTypeDao>((ref) async {
     await db.batch((batch) {
       batch.insertAll(db.mealTypes, [
         MealTypesCompanion(
-            name: const Value('Breakfast'), isCustom: const Value(false)),
+          nameKey: const Value('Breakfast'),
+          sortOrder: const Value(0),
+          isBuiltin: const Value(true),
+        ),
         MealTypesCompanion(
-            name: const Value('Lunch'), isCustom: const Value(false)),
+          nameKey: const Value('Lunch'),
+          sortOrder: const Value(1),
+          isBuiltin: const Value(true),
+        ),
         MealTypesCompanion(
-            name: const Value('Dinner'), isCustom: const Value(false)),
+          nameKey: const Value('Dinner'),
+          sortOrder: const Value(2),
+          isBuiltin: const Value(true),
+        ),
       ]);
     });
   }
@@ -151,12 +161,20 @@ final unitRegistryProvider = FutureProvider<IUnitRegistry>((ref) async {
 final conversionServiceProvider =
     FutureProvider<IConversionService>((ref) async {
   final registry = await ref.watch(unitRegistryProvider.future);
+  final db = await ref.watch(appDatabaseProvider.future);
   try {
-    return ConversionServiceImpl(registry);
+    return ConversionServiceImpl(registry, db);
   } catch (e) {
     if (e is AppException) rethrow;
     throw AppException('Failed to initialise conversion service', e);
   }
+});
+
+/// Parser turning pasted nutritional text into structured product data.
+final nutritionTextParserProvider =
+    FutureProvider<NutritionTextParser>((ref) async {
+  final conversion = await ref.watch(conversionServiceProvider.future);
+  return NutritionTextParser(conversion);
 });
 
 /// Provider for date/time utilities.
