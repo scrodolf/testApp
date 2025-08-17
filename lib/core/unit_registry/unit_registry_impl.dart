@@ -21,38 +21,92 @@ class UnitRegistryImpl implements IUnitRegistry {
       final existing = await _db.select(_db.units).get();
       if (existing.isEmpty) {
         await _db.batch((batch) {
-          batch.insertAll(_db.units, const [
+          batch.insertAll(_db.units, [
             // Base units
             UnitsCompanion(
-              name: Value('gram'),
-              dimension: Value('mass'),
-              factorToBase: Value(1),
+              name: const Value('gram'),
+              symbol: const Value('g'),
+              dimension: const Value('mass'),
+              factorToBase: const Value(1),
             ),
             UnitsCompanion(
-              name: Value('milliliter'),
-              dimension: Value('volume'),
-              factorToBase: Value(1),
+              name: const Value('kilogram'),
+              symbol: const Value('kg'),
+              dimension: const Value('mass'),
+              factorToBase: const Value(1000),
             ),
             UnitsCompanion(
-              name: Value('kilocalorie'),
-              dimension: Value('energy'),
-              factorToBase: Value(1),
-            ),
-            // Imperial units
-            UnitsCompanion(
-              name: Value('ounce'),
-              dimension: Value('mass'),
-              factorToBase: Value(28.3495),
+              name: const Value('milliliter'),
+              symbol: const Value('mL'),
+              dimension: const Value('volume'),
+              factorToBase: const Value(1),
             ),
             UnitsCompanion(
-              name: Value('cup'),
-              dimension: Value('volume'),
-              factorToBase: Value(236.588),
+              name: const Value('liter'),
+              symbol: const Value('L'),
+              dimension: const Value('volume'),
+              factorToBase: const Value(1000),
             ),
             UnitsCompanion(
-              name: Value('kilojoule'),
-              dimension: Value('energy'),
-              factorToBase: Value(0.239006),
+              name: const Value('kilocalorie'),
+              symbol: const Value('kcal'),
+              dimension: const Value('energy'),
+              factorToBase: const Value(1),
+            ),
+            // Common imperial units
+            UnitsCompanion(
+              name: const Value('ounce'),
+              symbol: const Value('oz'),
+              dimension: const Value('mass'),
+              factorToBase: const Value(28.349523),
+            ),
+            UnitsCompanion(
+              name: const Value('pound'),
+              symbol: const Value('lb'),
+              dimension: const Value('mass'),
+              factorToBase: const Value(453.59237),
+            ),
+            UnitsCompanion(
+              name: const Value('US fluid ounce'),
+              symbol: const Value('fl oz'),
+              dimension: const Value('volume'),
+              factorToBase: const Value(29.5735296),
+            ),
+            UnitsCompanion(
+              name: const Value('cup'),
+              symbol: const Value('cup'),
+              dimension: const Value('volume'),
+              factorToBase: const Value(236.5882365),
+            ),
+            UnitsCompanion(
+              name: const Value('teaspoon'),
+              symbol: const Value('tsp'),
+              dimension: const Value('volume'),
+              factorToBase: const Value(5),
+            ),
+            UnitsCompanion(
+              name: const Value('tablespoon'),
+              symbol: const Value('tbsp'),
+              dimension: const Value('volume'),
+              factorToBase: const Value(15),
+            ),
+            UnitsCompanion(
+              name: const Value('pint'),
+              symbol: const Value('pt'),
+              dimension: const Value('volume'),
+              factorToBase: const Value(473.176473),
+            ),
+            UnitsCompanion(
+              name: const Value('quart'),
+              symbol: const Value('qt'),
+              dimension: const Value('volume'),
+              factorToBase: const Value(946.352946),
+            ),
+            UnitsCompanion(
+              name: const Value('gallon'),
+              symbol: const Value('gal'),
+              dimension: const Value('volume'),
+              factorToBase: const Value(3785.411784),
             ),
           ]);
         });

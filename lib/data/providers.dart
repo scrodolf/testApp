@@ -76,11 +76,20 @@ final mealTypeDaoProvider = FutureProvider<MealTypeDao>((ref) async {
     await db.batch((batch) {
       batch.insertAll(db.mealTypes, [
         MealTypesCompanion(
-            name: const Value('Breakfast'), isCustom: const Value(false)),
+          nameKey: const Value('Breakfast'),
+          sortOrder: const Value(0),
+          isBuiltin: const Value(true),
+        ),
         MealTypesCompanion(
-            name: const Value('Lunch'), isCustom: const Value(false)),
+          nameKey: const Value('Lunch'),
+          sortOrder: const Value(1),
+          isBuiltin: const Value(true),
+        ),
         MealTypesCompanion(
-            name: const Value('Dinner'), isCustom: const Value(false)),
+          nameKey: const Value('Dinner'),
+          sortOrder: const Value(2),
+          isBuiltin: const Value(true),
+        ),
       ]);
     });
   }
@@ -151,8 +160,9 @@ final unitRegistryProvider = FutureProvider<IUnitRegistry>((ref) async {
 final conversionServiceProvider =
     FutureProvider<IConversionService>((ref) async {
   final registry = await ref.watch(unitRegistryProvider.future);
+  final db = await ref.watch(appDatabaseProvider.future);
   try {
-    return ConversionServiceImpl(registry);
+    return ConversionServiceImpl(registry, db);
   } catch (e) {
     if (e is AppException) rethrow;
     throw AppException('Failed to initialise conversion service', e);
