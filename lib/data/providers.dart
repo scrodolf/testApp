@@ -18,7 +18,7 @@ import 'package:food_app/domain/repositories/i_log_repository.dart';
 import 'package:food_app/domain/repositories/i_meal_type_repository.dart';
 import 'package:food_app/domain/repositories/i_goal_repository.dart';
 import 'package:food_app/utils/date_time_utils.dart';
-import 'package:food_app/core/parsers/nutrition_text_parser.dart';
+import 'package:food_app/data/services/nutrition_text_parser.dart';
 
 /// Provides a lazily opened [AppDatabase] instance.
 final appDatabaseProvider = FutureProvider<AppDatabase>((ref) async {
