@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../settings/settings_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../settings/debug_sample_data.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -84,6 +85,25 @@ class SettingsScreen extends ConsumerWidget {
               value: ThemeMode.dark,
               groupValue: settings.themeMode,
               onChanged: (v) => controller.setThemeMode(v!),
+            ),
+          ),
+          const Divider(),
+          _SectionHeader(AppLocalizations.of(context)!.debugSection),
+          Semantics(
+            label: AppLocalizations.of(context)!.createSampleDataSemantics,
+            child: ListTile(
+              title: Text(AppLocalizations.of(context)!.createSampleData),
+              onTap: () async {
+                await createSampleData(ref);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content:
+                          Text(AppLocalizations.of(context)!.sampleDataCreated),
+                    ),
+                  );
+                }
+              },
             ),
           ),
         ],
