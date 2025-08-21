@@ -1,5 +1,5 @@
-name: food_app
-description: A foundational UI for the Food App.
+name: food_tracker
+description: A foundational offline-first Food Tracker app.
 version: 0.1.0
 
 environment:
@@ -13,11 +13,10 @@ dependencies:
   drift: ^2.14.1
   path_provider: ^2.1.2
   sqlite3_flutter_libs: ^0.5.20
-  intl: ^0.18.1
+  shared_preferences: ^2.2.2
   table_calendar: ^3.0.9
   fl_chart: ^1.0.0
-  shared_preferences: ^2.2.2
-  permission_handler: ^11.1.0
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_lints: ^3.0.0
