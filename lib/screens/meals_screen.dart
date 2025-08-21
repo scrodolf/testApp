@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../data/meal_repository.dart';
 import 'meal_form_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MealsScreen extends ConsumerStatefulWidget {
   const MealsScreen({super.key});
@@ -67,9 +68,9 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${removed.name} deleted'),
+        content: Text(AppLocalizations.of(context)!.mealDeleted),
         action: SnackBarAction(
-          label: 'UNDO',
+          label: AppLocalizations.of(context)!.undoButton,
           onPressed: () async {
             // Can't fully restore details without fetching; reload all.
             // For simplicity, just reload from DB.
@@ -99,9 +100,9 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
       );
     }
     return Scaffold(
-      appBar: AppBar(title: const Text('Meals')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.mealsTitle)),
       body: _items.isEmpty
-          ? const Center(child: Text('No meals yet. Tap + to add one.'))
+          ? Center(child: Text(AppLocalizations.of(context)!.mealsEmpty))
           : AnimatedList(
               key: _listKey,
               initialItemCount: _items.length,
@@ -129,7 +130,7 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addMeal,
-        tooltip: 'Add meal',
+        tooltip: AppLocalizations.of(context)!.addMealTooltip,
         child: const Icon(Icons.add),
       ),
     );

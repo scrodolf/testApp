@@ -70,7 +70,8 @@ class _GoalEditorDialogState extends ConsumerState<GoalEditorDialog> {
                     : null,
               ),
               loading: () => const CircularProgressIndicator(),
-              error: (e, _) => Text('Error: $e'),
+              error: (e, _) =>
+                  Text('${AppLocalizations.of(context)!.errorPrefix} $e'),
             ),
             const SizedBox(height: 8),
             unitsAsync.when(
@@ -87,7 +88,8 @@ class _GoalEditorDialogState extends ConsumerState<GoalEditorDialog> {
                     : null,
               ),
               loading: () => const CircularProgressIndicator(),
-              error: (e, _) => Text('Error: $e'),
+              error: (e, _) =>
+                  Text('${AppLocalizations.of(context)!.errorPrefix} $e'),
             ),
             const SizedBox(height: 8),
             TextFormField(

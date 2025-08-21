@@ -110,7 +110,7 @@ class _LogEntryDialogState extends ConsumerState<LogEntryDialog> {
           onChanged: (v) => setState(() => _mealId = v),
         ),
         loading: () => const CircularProgressIndicator(),
-        error: (e, _) => Text('Error: $e'),
+        error: (e, _) => Text('${AppLocalizations.of(context)!.errorPrefix} $e'),
       );
     } else {
       final products = ref.watch(productsProvider);
@@ -125,7 +125,7 @@ class _LogEntryDialogState extends ConsumerState<LogEntryDialog> {
           onChanged: (v) => setState(() => _productId = v),
         ),
         loading: () => const CircularProgressIndicator(),
-        error: (e, _) => Text('Error: $e'),
+        error: (e, _) => Text('${AppLocalizations.of(context)!.errorPrefix} $e'),
       );
     }
   }
@@ -133,7 +133,7 @@ class _LogEntryDialogState extends ConsumerState<LogEntryDialog> {
   @override
   Widget build(BuildContext context) {
     final mealTypes = ref.watch(mealTypesProvider);
-    final dateStr = DateFormat('dd-MM-yyyy').format(_date);
+    final dateStr = DateFormat('dd.MM.yyyy').format(_date);
     final timeStr =
         DateFormat('HH:mm').format(DateTime(0, 1, 1, _time.hour, _time.minute));
     return AlertDialog(
@@ -207,7 +207,7 @@ class _LogEntryDialogState extends ConsumerState<LogEntryDialog> {
                 onChanged: (v) => setState(() => _mealTypeId = v),
               ),
               loading: () => const CircularProgressIndicator(),
-              error: (e, _) => Text('Error: $e'),
+              error: (e, _) => Text('${AppLocalizations.of(context)!.errorPrefix} $e'),
             ),
           ],
         ),

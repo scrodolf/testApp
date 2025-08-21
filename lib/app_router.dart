@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'screens/logs_screen.dart';
 import 'screens/meals_screen.dart';
@@ -29,12 +30,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             bottomNavigationBar: NavigationBar(
               selectedIndex: navigationShell.currentIndex,
               onDestinationSelected: navigationShell.goBranch,
-              destinations: const [
-                NavigationDestination(icon: Icon(Icons.history), label: 'Logs'),
-                NavigationDestination(icon: Icon(Icons.restaurant), label: 'Meals'),
-                NavigationDestination(icon: Icon(Icons.shopping_bag), label: 'Products'),
-                NavigationDestination(icon: Icon(Icons.bar_chart), label: 'Stats'),
-                NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
+              destinations: [
+                NavigationDestination(icon: const Icon(Icons.history), label: AppLocalizations.of(context)!.tabLogs),
+                NavigationDestination(icon: const Icon(Icons.restaurant), label: AppLocalizations.of(context)!.tabMeals),
+                NavigationDestination(icon: const Icon(Icons.shopping_bag), label: AppLocalizations.of(context)!.tabProducts),
+                NavigationDestination(icon: const Icon(Icons.bar_chart), label: AppLocalizations.of(context)!.tabStats),
+                NavigationDestination(icon: const Icon(Icons.settings), label: AppLocalizations.of(context)!.tabSettings),
               ],
             ),
           );

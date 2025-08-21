@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../data/product_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Displays the list of products with support for adding, editing and
 /// deleting items. Uses [AnimatedList] for smooth insert/remove animations
@@ -70,9 +71,9 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${removed.product.name} deleted'),
+        content: Text(AppLocalizations.of(context)!.productDeleted),
         action: SnackBarAction(
-          label: 'UNDO',
+          label: AppLocalizations.of(context)!.undoButton,
           onPressed: () async {
             await repo.addProduct(
               name: removed.product.name,
@@ -110,9 +111,9 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Products')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.productsTitle)),
       body: _items.isEmpty
-          ? const Center(child: Text('No products yet. Tap + to add one.'))
+          ? Center(child: Text(AppLocalizations.of(context)!.productsEmpty))
           : AnimatedList(
               key: _listKey,
               initialItemCount: _items.length,
@@ -140,7 +141,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addProduct,
-        tooltip: 'Add product',
+        tooltip: AppLocalizations.of(context)!.addProductTooltip,
         child: const Icon(Icons.add),
       ),
     );

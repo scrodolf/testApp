@@ -58,7 +58,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
                         entry.product?.name ??
                         AppLocalizations.of(context)!.unknown;
                     final dateStr =
-                        DateFormat('dd-MM-yyyy HH:mm').format(entry.log.loggedAtLocal);
+                        DateFormat('dd.MM.yyyy HH:mm').format(entry.log.loggedAtLocal);
                     final qty = entry.log.quantity.toStringAsFixed(2);
                     return Dismissible(
                       key: ValueKey(entry.log.id),
@@ -108,7 +108,8 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e')),
+              error: (e, _) => Center(
+                  child: Text('${AppLocalizations.of(context)!.errorPrefix} $e')),
             ),
           ),
         ],

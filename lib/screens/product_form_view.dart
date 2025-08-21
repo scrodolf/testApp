@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/local/app_database.dart';
 import '../data/product_repository.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 double _roundTo(double value, int places) {
   final mod = math.pow(10.0, places);
@@ -169,7 +170,9 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.productId == null ? 'Add Product' : 'Edit Product'),
+        title: Text(widget.productId == null
+            ? AppLocalizations.of(context)!.addProductTitle
+            : AppLocalizations.of(context)!.editProductTitle),
       ),
       body: Form(
         key: _formKey,
@@ -178,9 +181,11 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
           children: [
             TextFormField(
               controller: _nameCtrl,
-              decoration: const InputDecoration(labelText: 'Product name'),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context)!.productNameLabel),
               textInputAction: TextInputAction.next,
-              validator: (v) => v == null || v.trim().isEmpty ? 'Required' : null,
+              validator: (v) => v == null || v.trim().isEmpty
+                  ? AppLocalizations.of(context)!.requiredField
+                  : null,
             ),
             const SizedBox(height: 16),
             Row(
@@ -188,12 +193,12 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                 Expanded(
                   child: TextFormField(
                     controller: _servingCtrl,
-                    decoration: const InputDecoration(labelText: 'Serving size'),
+                    decoration: InputDecoration(labelText: AppLocalizations.of(context)!.servingSizeLabel),
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     validator: (v) {
                       final d = double.tryParse(v ?? '');
-                      if (d == null || d < 0) return 'Enter ≥ 0';
+                      if (d == null || d < 0) return AppLocalizations.of(context)!.enterNonNegative;
                       return null;
                     },
                   ),
@@ -207,13 +212,13 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                         DropdownMenuItem(value: u.id, child: Text(u.symbol ?? u.name)),
                     ],
                     onChanged: (v) => setState(() => _selectedUnitId = v),
-                    decoration: const InputDecoration(labelText: 'Unit'),
+                    decoration: InputDecoration(labelText: AppLocalizations.of(context)!.unitLabel),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 24),
-            Text('Nutritional values',
+            Text(AppLocalizations.of(context)!.nutritionalValues,
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             for (final cat in categories)
@@ -231,7 +236,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                         validator: (v) {
                           if (v == null || v.isEmpty) return null;
                           final d = double.tryParse(v);
-                          if (d == null || d < 0) return '≥ 0';
+                          if (d == null || d < 0) return AppLocalizations.of(context)!.nonNegative;
                           return null;
                         },
                       ),
@@ -247,7 +252,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
             const SizedBox(height: 24),
             Row(
               children: [
-                Text('Unit overrides',
+                Text(AppLocalizations.of(context)!.unitOverrides,
                     style: Theme.of(context).textTheme.titleMedium),
                 const Spacer(),
                 IconButton(
@@ -255,7 +260,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                     setState(() => _overrides.add(_OverrideEntry()));
                   },
                   icon: const Icon(Icons.add),
-                  tooltip: 'Add override',
+                  tooltip: AppLocalizations.of(context)!.addOverrideTooltip,
                 ),
               ],
             ),
@@ -273,7 +278,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                                 value: u.id, child: Text(u.symbol ?? u.name)),
                         ],
                         onChanged: (v) => setState(() => _overrides[i].unitId = v),
-                        decoration: const InputDecoration(labelText: 'Unit'),
+                        decoration: InputDecoration(labelText: AppLocalizations.of(context)!.unitLabel),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -281,12 +286,12 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                       child: TextFormField(
                         controller: _overrides[i].controller,
                         decoration:
-                            const InputDecoration(labelText: 'to base'),
+                            InputDecoration(labelText: AppLocalizations.of(context)!.toBaseLabel),
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true),
                         validator: (v) {
                           final d = double.tryParse(v ?? '');
-                          if (d == null || d < 0) return '≥ 0';
+                          if (d == null || d < 0) return AppLocalizations.of(context)!.nonNegative;
                           return null;
                         },
                       ),
@@ -299,7 +304,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                         });
                       },
                       icon: const Icon(Icons.delete),
-                      tooltip: 'Remove',
+                      tooltip: AppLocalizations.of(context)!.removeTooltip,
                     ),
                   ],
                 ),
@@ -310,12 +315,12 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
+                  child: Text(AppLocalizations.of(context)!.cancelButton),
                 ),
                 const SizedBox(width: 16),
                 FilledButton(
                   onPressed: _save,
-                  child: const Text('Save'),
+                  child: Text(AppLocalizations.of(context)!.saveButton),
                 ),
               ],
             )
@@ -350,8 +355,8 @@ class MiniConverterButton extends StatelessWidget {
         );
       },
       icon: const Icon(Icons.swap_horiz),
-      tooltip:
-          'Convert ${from.symbol ?? from.name} to ${to.symbol ?? to.name}',
+      tooltip: AppLocalizations.of(context)!
+          .convertUnits(from.symbol ?? from.name, to.symbol ?? to.name),
     );
   }
 }
@@ -436,7 +441,7 @@ class _MiniConverterDialogState extends State<_MiniConverterDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Close'),
+          child: Text(AppLocalizations.of(context)!.closeButton),
         )
       ],
     );

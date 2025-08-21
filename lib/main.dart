@@ -26,7 +26,7 @@ class FoodTrackerApp extends ConsumerWidget {
     final settings = ref.watch(settingsControllerProvider);
     final router = ref.watch(appRouterProvider);
     return MaterialApp.router(
-      title: 'Food Tracker',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
