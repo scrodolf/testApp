@@ -5,6 +5,7 @@ import '../settings/settings_controller.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../settings/debug_sample_data.dart';
 
+
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -23,6 +24,7 @@ class SettingsScreen extends ConsumerWidget {
             child: RadioListTile<UnitSystem>(
               title: Text(AppLocalizations.of(context)!.unitMetric),
               subtitle: Text(AppLocalizations.of(context)!.metricUnits),
+
               value: UnitSystem.metric,
               groupValue: settings.unitSystem,
               onChanged: (v) => controller.setUnitSystem(v!),
@@ -33,6 +35,7 @@ class SettingsScreen extends ConsumerWidget {
             child: RadioListTile<UnitSystem>(
               title: Text(AppLocalizations.of(context)!.unitImperial),
               subtitle: Text(AppLocalizations.of(context)!.imperialUnits),
+
               value: UnitSystem.imperial,
               groupValue: settings.unitSystem,
               onChanged: (v) => controller.setUnitSystem(v!),
@@ -44,6 +47,7 @@ class SettingsScreen extends ConsumerWidget {
             label: AppLocalizations.of(context)!.vitaminsBucketSemantics,
             child: RadioListTile<VitaminsMode>(
               title: Text(AppLocalizations.of(context)!.vitaminsBucket),
+
               value: VitaminsMode.generic,
               groupValue: settings.vitaminsMode,
               onChanged: (v) => controller.setVitaminsMode(v!),
@@ -53,6 +57,7 @@ class SettingsScreen extends ConsumerWidget {
             label: AppLocalizations.of(context)!.vitaminsSpecificSemantics,
             child: RadioListTile<VitaminsMode>(
               title: Text(AppLocalizations.of(context)!.vitaminsSpecific),
+
               value: VitaminsMode.specific,
               groupValue: settings.vitaminsMode,
               onChanged: (v) => controller.setVitaminsMode(v!),
@@ -64,6 +69,7 @@ class SettingsScreen extends ConsumerWidget {
             label: AppLocalizations.of(context)!.themeSystemSemantics,
             child: RadioListTile<ThemeMode>(
               title: Text(AppLocalizations.of(context)!.themeSystem),
+
               value: ThemeMode.system,
               groupValue: settings.themeMode,
               onChanged: (v) => controller.setThemeMode(v!),
@@ -73,6 +79,7 @@ class SettingsScreen extends ConsumerWidget {
             label: AppLocalizations.of(context)!.themeLightSemantics,
             child: RadioListTile<ThemeMode>(
               title: Text(AppLocalizations.of(context)!.themeLight),
+
               value: ThemeMode.light,
               groupValue: settings.themeMode,
               onChanged: (v) => controller.setThemeMode(v!),
@@ -82,6 +89,7 @@ class SettingsScreen extends ConsumerWidget {
             label: AppLocalizations.of(context)!.themeDarkSemantics,
             child: RadioListTile<ThemeMode>(
               title: Text(AppLocalizations.of(context)!.themeDark),
+
               value: ThemeMode.dark,
               groupValue: settings.themeMode,
               onChanged: (v) => controller.setThemeMode(v!),
@@ -106,6 +114,7 @@ class SettingsScreen extends ConsumerWidget {
               },
             ),
           ),
+
         ],
       ),
     );
@@ -122,6 +131,7 @@ class _SectionHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
       child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+
     );
   }
 }

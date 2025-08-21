@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../data/local/app_database.dart';
 import '../data/goal_repository.dart';
 import '../widgets/button_styles.dart';
+
 import '../data/conversion_service.dart';
 
 final _unitsProvider = FutureProvider<List<Unit>>((ref) {
@@ -73,6 +74,7 @@ class _GoalEditorDialogState extends ConsumerState<GoalEditorDialog> {
               loading: () => const CircularProgressIndicator(),
               error: (e, _) =>
                   Text('${AppLocalizations.of(context)!.errorPrefix} $e'),
+
             ),
             const SizedBox(height: 8),
             unitsAsync.when(
@@ -91,6 +93,7 @@ class _GoalEditorDialogState extends ConsumerState<GoalEditorDialog> {
               loading: () => const CircularProgressIndicator(),
               error: (e, _) =>
                   Text('${AppLocalizations.of(context)!.errorPrefix} $e'),
+
             ),
             const SizedBox(height: 8),
             TextFormField(
@@ -134,6 +137,7 @@ class _GoalEditorDialogState extends ConsumerState<GoalEditorDialog> {
         ),
         FilledButton(
           style: AppButtonStyles.primary(context),
+
           onPressed: _save,
           child: Text(AppLocalizations.of(context)!.saveButton),
         ),

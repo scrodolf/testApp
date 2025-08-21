@@ -7,6 +7,7 @@ import '../widgets/undo_snackbar.dart';
 import 'meal_form_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+
 class MealsScreen extends ConsumerStatefulWidget {
   const MealsScreen({super.key});
 
@@ -74,6 +75,7 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
       onUndo: () async {
         await _load();
       },
+
     );
   }
 
@@ -110,6 +112,7 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
                 itemBuilder: (context, index, animation) {
                   final meal = _items[index];
                   return SizeTransition(
+
                   sizeFactor: animation,
                   child: Dismissible(
                     key: ValueKey(meal.id),
@@ -138,6 +141,7 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
           tooltip: AppLocalizations.of(context)!.addMealTooltip,
           child: const Icon(Icons.add),
         ),
+
       ),
     );
   }

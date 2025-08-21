@@ -6,6 +6,7 @@ import '../data/product_repository.dart';
 import '../widgets/undo_snackbar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+
 /// Displays the list of products with support for adding, editing and
 /// deleting items. Uses [AnimatedList] for smooth insert/remove animations
 /// and shows an UNDO snackbar on deletions.
@@ -85,6 +86,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
         );
         await _load();
       },
+
     );
   }
 
@@ -122,6 +124,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                 itemBuilder: (context, index, animation) {
                   final product = _items[index];
                   return SizeTransition(
+
                   sizeFactor: animation,
                   child: Dismissible(
                     key: ValueKey(product.product.id),
@@ -150,6 +153,7 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
           tooltip: AppLocalizations.of(context)!.addProductTooltip,
           child: const Icon(Icons.add),
         ),
+
       ),
     );
   }

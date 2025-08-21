@@ -8,6 +8,7 @@ import '../data/conversion_service.dart';
 import '../data/local/app_database.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+
 class MealItemInput {
   MealItemInput({
     required this.product,
@@ -253,6 +254,7 @@ class _MealFormPage extends ConsumerWidget {
         title: Text(mealId == null
             ? AppLocalizations.of(context)!.newMealTitle
             : AppLocalizations.of(context)!.editMealTitle),
+
         actions: [
           IconButton(
             onPressed: () async {
@@ -263,17 +265,20 @@ class _MealFormPage extends ConsumerWidget {
             },
             icon: const Icon(Icons.save),
             tooltip: AppLocalizations.of(context)!.saveButton,
+
           )
         ],
       ),
       body: state.items.isEmpty && state.customEntries.isEmpty
           ? Center(child: Text(AppLocalizations.of(context)!.emptyMealHint))
+
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [
                 TextFormField(
                   initialValue: state.name,
                   decoration: InputDecoration(labelText: AppLocalizations.of(context)!.mealNameLabel),
+
                   onChanged: controller.setName,
                 ),
                 const SizedBox(height: 16),
@@ -291,6 +296,7 @@ class _MealFormPage extends ConsumerWidget {
                             keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             onChanged: (v) => controller.updateItem(index, amount: double.tryParse(v) ?? 0),
                             decoration: InputDecoration(labelText: AppLocalizations.of(context)!.qtyLabel),
+
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -308,6 +314,7 @@ class _MealFormPage extends ConsumerWidget {
                           onPressed: () => controller.removeItem(index),
                           icon: const Icon(Icons.delete),
                           tooltip: AppLocalizations.of(context)!.removeTooltip,
+
                         )
                       ],
                     ),
@@ -336,6 +343,7 @@ class _MealFormPage extends ConsumerWidget {
                             keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             onChanged: (v) => controller.updateCustom(index, amount: double.tryParse(v) ?? 0),
                             decoration: InputDecoration(labelText: AppLocalizations.of(context)!.amountLabel),
+
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -353,6 +361,7 @@ class _MealFormPage extends ConsumerWidget {
                           onPressed: () => controller.removeCustom(index),
                           icon: const Icon(Icons.delete),
                           tooltip: AppLocalizations.of(context)!.removeTooltip,
+
                         )
                       ],
                     ),
@@ -362,6 +371,7 @@ class _MealFormPage extends ConsumerWidget {
                   onPressed: controller.addCustomEntry,
                   icon: const Icon(Icons.add),
                   label: Text(AppLocalizations.of(context)!.addCustomEntry),
+
                 ),
                 const SizedBox(height: 16),
                 Card(
@@ -402,6 +412,7 @@ class _MealFormPage extends ConsumerWidget {
           }
         },
         tooltip: AppLocalizations.of(context)!.addProductTooltip,
+
         child: const Icon(Icons.add),
       ),
     );

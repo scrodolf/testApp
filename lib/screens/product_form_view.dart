@@ -8,6 +8,7 @@ import '../data/product_repository.dart';
 import '../widgets/button_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+
 double _roundTo(double value, int places) {
   final mod = math.pow(10.0, places);
   return (value * mod).round() / mod;
@@ -174,6 +175,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
         title: Text(widget.productId == null
             ? AppLocalizations.of(context)!.addProductTitle
             : AppLocalizations.of(context)!.editProductTitle),
+
       ),
       body: Form(
         key: _formKey,
@@ -187,6 +189,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
               validator: (v) => v == null || v.trim().isEmpty
                   ? AppLocalizations.of(context)!.requiredField
                   : null,
+
             ),
             const SizedBox(height: 16),
             Row(
@@ -195,11 +198,13 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                   child: TextFormField(
                     controller: _servingCtrl,
                     decoration: InputDecoration(labelText: AppLocalizations.of(context)!.servingSizeLabel),
+
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     validator: (v) {
                       final d = double.tryParse(v ?? '');
                       if (d == null || d < 0) return AppLocalizations.of(context)!.enterNonNegative;
+
                       return null;
                     },
                   ),
@@ -214,12 +219,14 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                     ],
                     onChanged: (v) => setState(() => _selectedUnitId = v),
                     decoration: InputDecoration(labelText: AppLocalizations.of(context)!.unitLabel),
+
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 24),
             Text(AppLocalizations.of(context)!.nutritionalValues,
+
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             for (final cat in categories)
@@ -238,6 +245,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                           if (v == null || v.isEmpty) return null;
                           final d = double.tryParse(v);
                           if (d == null || d < 0) return AppLocalizations.of(context)!.nonNegative;
+
                           return null;
                         },
                       ),
@@ -254,6 +262,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
             Row(
               children: [
                 Text(AppLocalizations.of(context)!.unitOverrides,
+
                     style: Theme.of(context).textTheme.titleMedium),
                 const Spacer(),
                 IconButton(
@@ -262,6 +271,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                   },
                   icon: const Icon(Icons.add),
                   tooltip: AppLocalizations.of(context)!.addOverrideTooltip,
+
                 ),
               ],
             ),
@@ -280,6 +290,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                         ],
                         onChanged: (v) => setState(() => _overrides[i].unitId = v),
                         decoration: InputDecoration(labelText: AppLocalizations.of(context)!.unitLabel),
+
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -288,11 +299,13 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                         controller: _overrides[i].controller,
                         decoration:
                             InputDecoration(labelText: AppLocalizations.of(context)!.toBaseLabel),
+
                         keyboardType: const TextInputType.numberWithOptions(
                             decimal: true),
                         validator: (v) {
                           final d = double.tryParse(v ?? '');
                           if (d == null || d < 0) return AppLocalizations.of(context)!.nonNegative;
+
                           return null;
                         },
                       ),
@@ -308,6 +321,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                       tooltip: AppLocalizations.of(context)!.removeTooltip,
                       constraints:
                           const BoxConstraints(minWidth: 48, minHeight: 48),
+
                     ),
                   ],
                 ),
@@ -325,6 +339,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                   style: AppButtonStyles.primary(context),
                   onPressed: _save,
                   child: Text(AppLocalizations.of(context)!.saveButton),
+
                 ),
               ],
             )
@@ -361,6 +376,7 @@ class MiniConverterButton extends StatelessWidget {
       icon: const Icon(Icons.swap_horiz),
       tooltip: AppLocalizations.of(context)!
           .convertUnits(from.symbol ?? from.name, to.symbol ?? to.name),
+
     );
   }
 }
@@ -446,6 +462,7 @@ class _MiniConverterDialogState extends State<_MiniConverterDialog> {
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text(AppLocalizations.of(context)!.closeButton),
+
         )
       ],
     );
