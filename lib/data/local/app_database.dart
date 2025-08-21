@@ -88,6 +88,9 @@ class MealCustomEntries extends Table {
 class Logs extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get mealId => integer().references(Meals, #id).nullable()();
+  IntColumn get productId => integer().references(Products, #id).nullable()();
+  RealColumn get quantity =>
+      real().withDefault(const Constant(1))();
   IntColumn get mealTypeId => integer().references(MealTypes, #id)();
   DateTimeColumn get loggedAtLocal => dateTime()();
   IntColumn get timeZoneOffsetMinutes => integer()();
@@ -131,7 +134,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -142,13 +145,18 @@ class AppDatabase extends _$AppDatabase {
         onUpgrade: (m, from, to) async {
           for (var version = from; version < to; version++) {
             switch (version) {
-              // case 1:
-              //   await _migrateFrom1To2(m);
-              //   break;
+              case 1:
+                await _migrateFrom1To2(m);
+                break;
             }
           }
         },
       );
+
+  Future<void> _migrateFrom1To2(Migrator m) async {
+    await m.addColumn(logs, logs.productId);
+    await m.addColumn(logs, logs.quantity);
+  }
 
   Future<void> _seed() async {
     if (await (select(units).get()).then((rows) => rows.isEmpty)) {
