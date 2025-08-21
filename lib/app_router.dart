@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'screens/logs_screen.dart';
 import 'screens/meals_screen.dart';
+import 'screens/meal_form_view.dart';
 import 'screens/products_screen.dart';
 import 'screens/product_form_view.dart';
 import 'screens/statistics_screen.dart';
@@ -32,7 +33,23 @@ final appRouter = GoRouter(
           GoRoute(path: '/logs', builder: (context, state) => const LogsScreen()),
         ]),
         StatefulShellBranch(routes: [
-          GoRoute(path: '/meals', builder: (context, state) => const MealsScreen()),
+          GoRoute(
+            path: '/meals',
+            builder: (context, state) => const MealsScreen(),
+            routes: [
+              GoRoute(
+                path: 'new',
+                builder: (context, state) => const MealFormView(),
+              ),
+              GoRoute(
+                path: ':id',
+                builder: (context, state) {
+                  final id = int.parse(state.pathParameters['id']!);
+                  return MealFormView(mealId: id);
+                },
+              ),
+            ],
+          ),
         ]),
         StatefulShellBranch(routes: [
           GoRoute(
