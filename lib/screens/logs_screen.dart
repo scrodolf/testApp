@@ -5,6 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../data/log_repository.dart';
+import '../widgets/undo_snackbar.dart';
 import 'log_entry_dialog.dart';
 
 /// Displays a calendar and chronological list of log entries for the selected
@@ -46,80 +47,88 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
           Expanded(
             child: logsAsync.when(
               data: (logs) {
-                if (logs.isEmpty) {
-                  return Center(
-                      child: Text(AppLocalizations.of(context)!.logsEmpty)),
-                }
-                return ListView.builder(
-                  itemCount: logs.length,
-                  itemBuilder: (context, index) {
-                    final entry = logs[index];
-                    final name = entry.meal?.name ??
-                        entry.product?.name ??
-                        AppLocalizations.of(context)!.unknown;
-                    final dateStr =
-                        DateFormat('dd-MM-yyyy HH:mm').format(entry.log.loggedAtLocal);
-                    final qty = entry.log.quantity.toStringAsFixed(2);
-                    return Dismissible(
-                      key: ValueKey(entry.log.id),
-                      background: Container(
-                        color: Theme.of(context).colorScheme.error,
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.only(left: 16),
-                        child: const Icon(Icons.delete, color: Colors.white),
-                      ),
-                      direction: DismissDirection.startToEnd,
-                      onDismissed: (_) {
-                        final repo = ref.read(logRepositoryProvider);
-                        repo.deleteLog(entry.log.id);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                AppLocalizations.of(context)!.logDeleted),
-                            action: SnackBarAction(
-                              label:
-                                  AppLocalizations.of(context)!.undoButton,
-                              onPressed: () {
-                                repo.addLog(
-                                  mealId: entry.log.mealId,
-                                  productId: entry.log.productId,
-                                  quantity: entry.log.quantity,
-                                  loggedAtLocal: entry.log.loggedAtLocal,
-                                  mealTypeId: entry.log.mealTypeId,
-                                );
-                              },
+                final Widget list = logs.isEmpty
+                    ? Center(
+                        child: Text(AppLocalizations.of(context)!.logsEmpty),
+                      )
+                    : ListView.builder(
+                        itemCount: logs.length,
+                        itemBuilder: (context, index) {
+                          final entry = logs[index];
+                          final name = entry.meal?.name ??
+                              entry.product?.name ??
+                              AppLocalizations.of(context)!.unknown;
+                          final dateStr =
+                              DateFormat('dd.MM.yyyy HH:mm').format(entry.log.loggedAtLocal);
+                          final qty = entry.log.quantity.toStringAsFixed(2);
+                          return Dismissible(
+                            key: ValueKey(entry.log.id),
+                            background: Container(
+                              color: Theme.of(context).colorScheme.error,
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.only(left: 16),
+                              child: const Icon(Icons.delete, color: Colors.white),
                             ),
-                          ),
-                        );
-                      },
-                      child: ListTile(
-                        title: Text(name),
-                        subtitle: Text(dateStr),
-                        trailing: Text(qty),
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (_) => LogEntryDialog(entry: entry),
+                            direction: DismissDirection.startToEnd,
+                            onDismissed: (_) {
+                              final repo = ref.read(logRepositoryProvider);
+                              repo.deleteLog(entry.log.id);
+                              showUndoSnackbar(
+                                context,
+                                message: AppLocalizations.of(context)!.logDeleted,
+                                undoLabel: AppLocalizations.of(context)!.undoButton,
+                                onUndo: () {
+                                  repo.addLog(
+                                    mealId: entry.log.mealId,
+                                    productId: entry.log.productId,
+                                    quantity: entry.log.quantity,
+                                    loggedAtLocal: entry.log.loggedAtLocal,
+                                    mealTypeId: entry.log.mealTypeId,
+                                  );
+                                },
+                              );
+                            },
+                            child: Semantics(
+                              button: true,
+                              label: name,
+                              child: ListTile(
+                                title: Text(name),
+                                subtitle: Text(dateStr),
+                                trailing: Text(qty),
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (_) => LogEntryDialog(entry: entry),
+                                  );
+                                },
+                              ),
+                            ),
                           );
                         },
-                      ),
-                    );
-                  },
+                      );
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: list,
                 );
               },
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('Error: $e')),
+              error: (e, _) => Center(
+                  child: Text('${AppLocalizations.of(context)!.errorPrefix} $e')),
             ),
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => showDialog(
-          context: context,
-          builder: (_) => LogEntryDialog(initialDate: _selectedDay),
+      floatingActionButton: Semantics(
+        label: AppLocalizations.of(context)!.logsAddTooltip,
+        button: true,
+        child: FloatingActionButton(
+          onPressed: () => showDialog(
+            context: context,
+            builder: (_) => LogEntryDialog(initialDate: _selectedDay),
+          ),
+          tooltip: AppLocalizations.of(context)!.logsAddTooltip,
+          child: const Icon(Icons.add),
         ),
-        tooltip: AppLocalizations.of(context)!.logsAddTooltip,
-        child: const Icon(Icons.add),
       ),
     );
   }

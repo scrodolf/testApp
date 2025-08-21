@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../data/product_repository.dart';
+import '../widgets/undo_snackbar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 /// Displays the list of products with support for adding, editing and
 /// deleting items. Uses [AnimatedList] for smooth insert/remove animations
@@ -68,25 +71,22 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     );
     await repo.deleteProduct(removed.product.id);
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${removed.product.name} deleted'),
-        action: SnackBarAction(
-          label: 'UNDO',
-          onPressed: () async {
-            await repo.addProduct(
-              name: removed.product.name,
-              defaultServingSize: removed.product.servingAmountBase,
-              defaultUnitId: removed.product.servingUnitId,
-              categoryValues: removed.categoryValues,
-              unitOverrides: removed.unitOverrides.isEmpty
-                  ? null
-                  : removed.unitOverrides,
-            );
-            await _load();
-          },
-        ),
-      ),
+    showUndoSnackbar(
+      context,
+      message: AppLocalizations.of(context)!.productDeleted,
+      undoLabel: AppLocalizations.of(context)!.undoButton,
+      onUndo: () async {
+        await repo.addProduct(
+          name: removed.product.name,
+          defaultServingSize: removed.product.servingAmountBase,
+          defaultUnitId: removed.product.servingUnitId,
+          categoryValues: removed.categoryValues,
+          unitOverrides:
+              removed.unitOverrides.isEmpty ? null : removed.unitOverrides,
+        );
+        await _load();
+      },
+
     );
   }
 
@@ -110,15 +110,21 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Products')),
-      body: _items.isEmpty
-          ? const Center(child: Text('No products yet. Tap + to add one.'))
-          : AnimatedList(
-              key: _listKey,
-              initialItemCount: _items.length,
-              itemBuilder: (context, index, animation) {
-                final product = _items[index];
-                return SizeTransition(
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.productsTitle)),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: _items.isEmpty
+            ? Center(
+                key: const ValueKey('empty'),
+                child: Text(AppLocalizations.of(context)!.productsEmpty),
+              )
+            : AnimatedList(
+                key: _listKey,
+                initialItemCount: _items.length,
+                itemBuilder: (context, index, animation) {
+                  final product = _items[index];
+                  return SizeTransition(
+
                   sizeFactor: animation,
                   child: Dismissible(
                     key: ValueKey(product.product.id),
@@ -138,10 +144,16 @@ class _ProductsScreenState extends ConsumerState<ProductsScreen> {
                 );
               },
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addProduct,
-        tooltip: 'Add product',
-        child: const Icon(Icons.add),
+      ),
+      floatingActionButton: Semantics(
+        label: AppLocalizations.of(context)!.addProductTooltip,
+        button: true,
+        child: FloatingActionButton(
+          onPressed: _addProduct,
+          tooltip: AppLocalizations.of(context)!.addProductTooltip,
+          child: const Icon(Icons.add),
+        ),
+
       ),
     );
   }

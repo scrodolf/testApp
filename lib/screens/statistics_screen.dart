@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
+
 
 import '../data/goal_repository.dart';
 import 'goal_editor_dialog.dart';
@@ -62,7 +64,9 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen>
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => Center(
+            child: Text('${AppLocalizations.of(context)!.errorPrefix} $e')),
+
       ),
       floatingActionButton: _tabController.index == 0
           ? FloatingActionButton(
@@ -174,7 +178,9 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen>
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Error: $e')),
+      error: (e, _) => Center(
+          child: Text('${AppLocalizations.of(context)!.errorPrefix} $e')),
+
     );
   }
 }
@@ -185,7 +191,11 @@ class _WeeklyChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    final locale = Localizations.localeOf(context).toString();
+    final start = DateTime(2020, 1, 6); // Monday
+    final days = List.generate(
+        7, (i) => DateFormat.E(locale).format(start.add(Duration(days: i))));
+
     final bars = <BarChartGroupData>[];
     for (var i = 0; i < 7; i++) {
       final val = progress.weeklyTotals[i];

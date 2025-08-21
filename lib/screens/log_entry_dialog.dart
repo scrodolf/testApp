@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../data/log_repository.dart';
+import '../widgets/button_styles.dart';
+
 
 enum _LogTarget { meal, product }
 
@@ -110,7 +112,8 @@ class _LogEntryDialogState extends ConsumerState<LogEntryDialog> {
           onChanged: (v) => setState(() => _mealId = v),
         ),
         loading: () => const CircularProgressIndicator(),
-        error: (e, _) => Text('Error: $e'),
+        error: (e, _) => Text('${AppLocalizations.of(context)!.errorPrefix} $e'),
+
       );
     } else {
       final products = ref.watch(productsProvider);
@@ -125,7 +128,8 @@ class _LogEntryDialogState extends ConsumerState<LogEntryDialog> {
           onChanged: (v) => setState(() => _productId = v),
         ),
         loading: () => const CircularProgressIndicator(),
-        error: (e, _) => Text('Error: $e'),
+        error: (e, _) => Text('${AppLocalizations.of(context)!.errorPrefix} $e'),
+
       );
     }
   }
@@ -133,7 +137,8 @@ class _LogEntryDialogState extends ConsumerState<LogEntryDialog> {
   @override
   Widget build(BuildContext context) {
     final mealTypes = ref.watch(mealTypesProvider);
-    final dateStr = DateFormat('dd-MM-yyyy').format(_date);
+    final dateStr = DateFormat('dd.MM.yyyy').format(_date);
+
     final timeStr =
         DateFormat('HH:mm').format(DateTime(0, 1, 1, _time.hour, _time.minute));
     return AlertDialog(
@@ -207,7 +212,8 @@ class _LogEntryDialogState extends ConsumerState<LogEntryDialog> {
                 onChanged: (v) => setState(() => _mealTypeId = v),
               ),
               loading: () => const CircularProgressIndicator(),
-              error: (e, _) => Text('Error: $e'),
+              error: (e, _) => Text('${AppLocalizations.of(context)!.errorPrefix} $e'),
+
             ),
           ],
         ),
@@ -217,7 +223,9 @@ class _LogEntryDialogState extends ConsumerState<LogEntryDialog> {
           onPressed: () => Navigator.of(context).pop(),
           child: Text(AppLocalizations.of(context)!.cancelButton),
         ),
-        TextButton(
+        FilledButton(
+          style: AppButtonStyles.primary(context),
+
           onPressed: (_mealTypeId != null &&
                   ((_target == _LogTarget.meal && _mealId != null) ||
                       (_target == _LogTarget.product && _productId != null)))
