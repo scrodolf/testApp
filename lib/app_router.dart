@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'screens/logs_screen.dart';
 import 'screens/meals_screen.dart';
 import 'screens/products_screen.dart';
+import 'screens/product_form_view.dart';
 import 'screens/statistics_screen.dart';
 import 'screens/settings_screen.dart';
 
@@ -34,7 +35,23 @@ final appRouter = GoRouter(
           GoRoute(path: '/meals', builder: (context, state) => const MealsScreen()),
         ]),
         StatefulShellBranch(routes: [
-          GoRoute(path: '/products', builder: (context, state) => const ProductsScreen()),
+          GoRoute(
+            path: '/products',
+            builder: (context, state) => const ProductsScreen(),
+            routes: [
+              GoRoute(
+                path: 'new',
+                builder: (context, state) => const ProductFormView(),
+              ),
+              GoRoute(
+                path: ':id',
+                builder: (context, state) {
+                  final id = int.parse(state.pathParameters['id']!);
+                  return ProductFormView(productId: id);
+                },
+              ),
+            ],
+          ),
         ]),
         StatefulShellBranch(routes: [
           GoRoute(path: '/statistics', builder: (context, state) => const StatisticsScreen()),
