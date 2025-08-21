@@ -101,6 +101,7 @@ class _SectionHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
       child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+
     );
   }
 }
