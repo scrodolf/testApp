@@ -26,7 +26,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return Scaffold(
-            body: navigationShell,
+            body: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: KeyedSubtree(
+                key: ValueKey(navigationShell.currentIndex),
+                child: navigationShell,
+              ),
+            ),
             bottomNavigationBar: NavigationBar(
               selectedIndex: navigationShell.currentIndex,
               onDestinationSelected: navigationShell.goBranch,

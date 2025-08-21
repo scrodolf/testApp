@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/local/app_database.dart';
 import '../data/product_repository.dart';
+import '../widgets/button_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 double _roundTo(double value, int places) {
@@ -305,6 +306,8 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                       },
                       icon: const Icon(Icons.delete),
                       tooltip: AppLocalizations.of(context)!.removeTooltip,
+                      constraints:
+                          const BoxConstraints(minWidth: 48, minHeight: 48),
                     ),
                   ],
                 ),
@@ -319,6 +322,7 @@ class _ProductFormViewState extends ConsumerState<ProductFormView> {
                 ),
                 const SizedBox(width: 16),
                 FilledButton(
+                  style: AppButtonStyles.primary(context),
                   onPressed: _save,
                   child: Text(AppLocalizations.of(context)!.saveButton),
                 ),

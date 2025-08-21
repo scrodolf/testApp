@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../data/meal_repository.dart';
+import '../widgets/undo_snackbar.dart';
 import 'meal_form_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -66,18 +67,13 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
     );
     await repo.deleteMeal(removed.id);
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.mealDeleted),
-        action: SnackBarAction(
-          label: AppLocalizations.of(context)!.undoButton,
-          onPressed: () async {
-            // Can't fully restore details without fetching; reload all.
-            // For simplicity, just reload from DB.
-            await _load();
-          },
-        ),
-      ),
+    showUndoSnackbar(
+      context,
+      message: AppLocalizations.of(context)!.mealDeleted,
+      undoLabel: AppLocalizations.of(context)!.undoButton,
+      onUndo: () async {
+        await _load();
+      },
     );
   }
 
@@ -101,14 +97,19 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
     }
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.mealsTitle)),
-      body: _items.isEmpty
-          ? Center(child: Text(AppLocalizations.of(context)!.mealsEmpty))
-          : AnimatedList(
-              key: _listKey,
-              initialItemCount: _items.length,
-              itemBuilder: (context, index, animation) {
-                final meal = _items[index];
-                return SizeTransition(
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: _items.isEmpty
+            ? Center(
+                key: const ValueKey('empty'),
+                child: Text(AppLocalizations.of(context)!.mealsEmpty),
+              )
+            : AnimatedList(
+                key: _listKey,
+                initialItemCount: _items.length,
+                itemBuilder: (context, index, animation) {
+                  final meal = _items[index];
+                  return SizeTransition(
                   sizeFactor: animation,
                   child: Dismissible(
                     key: ValueKey(meal.id),
@@ -128,10 +129,15 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
                 );
               },
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addMeal,
-        tooltip: AppLocalizations.of(context)!.addMealTooltip,
-        child: const Icon(Icons.add),
+      ),
+      floatingActionButton: Semantics(
+        label: AppLocalizations.of(context)!.addMealTooltip,
+        button: true,
+        child: FloatingActionButton(
+          onPressed: _addMeal,
+          tooltip: AppLocalizations.of(context)!.addMealTooltip,
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

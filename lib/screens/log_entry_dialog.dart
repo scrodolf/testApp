@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../data/log_repository.dart';
+import '../widgets/button_styles.dart';
 
 enum _LogTarget { meal, product }
 
@@ -217,7 +218,8 @@ class _LogEntryDialogState extends ConsumerState<LogEntryDialog> {
           onPressed: () => Navigator.of(context).pop(),
           child: Text(AppLocalizations.of(context)!.cancelButton),
         ),
-        TextButton(
+        FilledButton(
+          style: AppButtonStyles.primary(context),
           onPressed: (_mealTypeId != null &&
                   ((_target == _LogTarget.meal && _mealId != null) ||
                       (_target == _LogTarget.product && _productId != null)))
