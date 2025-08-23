@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_tracker/l10n/app_localizations.dart';
 
 import '../data/local/app_database.dart';
 import '../data/goal_repository.dart';
@@ -117,13 +117,17 @@ class _GoalEditorDialogState extends ConsumerState<GoalEditorDialog> {
                   title: Text(AppLocalizations.of(context)!.weekly),
                   value: GoalPeriod.week,
                   groupValue: _period,
-                  onChanged: (v) => setState(() => _period = v!),
+                  onChanged: (v) {
+                    if (v != null) setState(() => _period = v);
+                  },
                 ),
                 RadioListTile<GoalPeriod>(
                   title: Text(AppLocalizations.of(context)!.monthly),
                   value: GoalPeriod.month,
                   groupValue: _period,
-                  onChanged: (v) => setState(() => _period = v!),
+                  onChanged: (v) {
+                    if (v != null) setState(() => _period = v);
+                  },
                 ),
               ],
             ),

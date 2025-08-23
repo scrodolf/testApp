@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../settings/settings_controller.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_tracker/l10n/app_localizations.dart';
 import '../settings/debug_sample_data.dart';
 
 
@@ -27,7 +27,9 @@ class SettingsScreen extends ConsumerWidget {
 
               value: UnitSystem.metric,
               groupValue: settings.unitSystem,
-              onChanged: (v) => controller.setUnitSystem(v!),
+              onChanged: (v) {
+                if (v != null) controller.setUnitSystem(v);
+              },
             ),
           ),
           Semantics(
@@ -38,7 +40,9 @@ class SettingsScreen extends ConsumerWidget {
 
               value: UnitSystem.imperial,
               groupValue: settings.unitSystem,
-              onChanged: (v) => controller.setUnitSystem(v!),
+              onChanged: (v) {
+                if (v != null) controller.setUnitSystem(v);
+              },
             ),
           ),
           const Divider(),
@@ -50,7 +54,9 @@ class SettingsScreen extends ConsumerWidget {
 
               value: VitaminsMode.generic,
               groupValue: settings.vitaminsMode,
-              onChanged: (v) => controller.setVitaminsMode(v!),
+              onChanged: (v) {
+                if (v != null) controller.setVitaminsMode(v);
+              },
             ),
           ),
           Semantics(
@@ -60,7 +66,9 @@ class SettingsScreen extends ConsumerWidget {
 
               value: VitaminsMode.specific,
               groupValue: settings.vitaminsMode,
-              onChanged: (v) => controller.setVitaminsMode(v!),
+              onChanged: (v) {
+                if (v != null) controller.setVitaminsMode(v);
+              },
             ),
           ),
           const Divider(),
@@ -72,7 +80,9 @@ class SettingsScreen extends ConsumerWidget {
 
               value: ThemeMode.system,
               groupValue: settings.themeMode,
-              onChanged: (v) => controller.setThemeMode(v!),
+              onChanged: (v) {
+                if (v != null) controller.setThemeMode(v);
+              },
             ),
           ),
           Semantics(
@@ -82,7 +92,9 @@ class SettingsScreen extends ConsumerWidget {
 
               value: ThemeMode.light,
               groupValue: settings.themeMode,
-              onChanged: (v) => controller.setThemeMode(v!),
+              onChanged: (v) {
+                if (v != null) controller.setThemeMode(v);
+              },
             ),
           ),
           Semantics(
@@ -92,7 +104,9 @@ class SettingsScreen extends ConsumerWidget {
 
               value: ThemeMode.dark,
               groupValue: settings.themeMode,
-              onChanged: (v) => controller.setThemeMode(v!),
+              onChanged: (v) {
+                if (v != null) controller.setThemeMode(v);
+              },
             ),
           ),
           const Divider(),

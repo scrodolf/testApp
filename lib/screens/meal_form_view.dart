@@ -6,7 +6,7 @@ import '../data/product_repository.dart';
 import '../data/meal_repository.dart';
 import '../data/conversion_service.dart';
 import '../data/local/app_database.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_tracker/l10n/app_localizations.dart';
 
 
 class MealItemInput {

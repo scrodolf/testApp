@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_tracker/l10n/app_localizations.dart';
 
 
 import 'screens/logs_screen.dart';
@@ -100,7 +100,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     ],
     redirect: (context, state) {
       final done = prefs.getBool(kOnboardingCompleteKey) ?? false;
-      final inOnboarding = state.subloc == '/onboarding';
+      final inOnboarding = state.matchedLocation == '/onboarding';
       if (!done && !inOnboarding) return '/onboarding';
       if (done && inOnboarding) return '/logs';
       return null;
