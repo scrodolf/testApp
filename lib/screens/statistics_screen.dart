@@ -6,9 +6,10 @@ import 'package:intl/intl.dart';
 
 
 import '../data/goal_repository.dart';
+import '../data/local/app_database.dart';
 import 'goal_editor_dialog.dart';
 
-Color _colorForDisposition(GoalDisposition d) {
+Color goalColor(GoalDisposition d) {
   switch (d) {
     case GoalDisposition.good:
       return Colors.green;
@@ -17,6 +18,7 @@ Color _colorForDisposition(GoalDisposition d) {
     case GoalDisposition.bad:
       return Colors.red;
   }
+  return Colors.grey;
 }
 
 class StatisticsScreen extends ConsumerStatefulWidget {
@@ -168,7 +170,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen>
               if (progress.weeklyDisposition == GoalDisposition.good &&
                   progress.monthlyDisposition != GoalDisposition.good)
                 Text(AppLocalizations.of(context)!.monthlyWarning,
-                    style: TextStyle(color: _colorForDisposition(progress.monthlyDisposition))),
+                    style: TextStyle(color: goalColor(progress.monthlyDisposition))),
               SizedBox(
                 height: 220,
                 child: _MonthlyChart(progress: progress),
@@ -245,7 +247,7 @@ class _WeeklyChart extends StatelessWidget {
             HorizontalRangeAnnotation(
               y1: 0,
               y2: progress.capValue,
-              color: Colors.green.withOpacity(0.2),
+              color: Colors.green.withAlpha(51),
             )
           ],
         ),
@@ -295,7 +297,7 @@ class _MonthlyChart extends StatelessWidget {
             HorizontalRangeAnnotation(
               y1: 0,
               y2: progress.capValue,
-              color: Colors.green.withOpacity(0.2),
+              color: Colors.green.withAlpha(51),
             )
           ],
         ),
@@ -304,7 +306,7 @@ class _MonthlyChart extends StatelessWidget {
             spots: spots,
             isCurved: false,
             barWidth: 3,
-            color: _colorForDisposition(progress.monthlyDisposition),
+            color: goalColor(progress.monthlyDisposition),
             dotData: FlDotData(show: true),
           )
         ],

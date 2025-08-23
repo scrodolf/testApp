@@ -117,13 +117,17 @@ class _GoalEditorDialogState extends ConsumerState<GoalEditorDialog> {
                   title: Text(AppLocalizations.of(context)!.weekly),
                   value: GoalPeriod.week,
                   groupValue: _period,
-                  onChanged: (v) => setState(() => _period = v!),
+                  onChanged: (v) {
+                    if (v != null) setState(() => _period = v);
+                  },
                 ),
                 RadioListTile<GoalPeriod>(
                   title: Text(AppLocalizations.of(context)!.monthly),
                   value: GoalPeriod.month,
                   groupValue: _period,
-                  onChanged: (v) => setState(() => _period = v!),
+                  onChanged: (v) {
+                    if (v != null) setState(() => _period = v);
+                  },
                 ),
               ],
             ),

@@ -76,13 +76,17 @@ class _UnitSystemStep extends ConsumerWidget {
           title: Text(strings.unitMetric),
           value: UnitSystem.metric,
           groupValue: current,
-          onChanged: (v) => controller.setUnitSystem(v!),
+          onChanged: (v) {
+            if (v != null) controller.setUnitSystem(v);
+          },
         ),
         RadioListTile<UnitSystem>(
           title: Text(strings.unitImperial),
           value: UnitSystem.imperial,
           groupValue: current,
-          onChanged: (v) => controller.setUnitSystem(v!),
+          onChanged: (v) {
+            if (v != null) controller.setUnitSystem(v);
+          },
         ),
       ],
     );
@@ -103,13 +107,17 @@ class _VitaminsStep extends ConsumerWidget {
           title: Text(strings.vitaminsBucket),
           value: VitaminsMode.generic,
           groupValue: current,
-          onChanged: (v) => controller.setVitaminsMode(v!),
+          onChanged: (v) {
+            if (v != null) controller.setVitaminsMode(v);
+          },
         ),
         RadioListTile<VitaminsMode>(
           title: Text(strings.vitaminsSpecific),
           value: VitaminsMode.specific,
           groupValue: current,
-          onChanged: (v) => controller.setVitaminsMode(v!),
+          onChanged: (v) {
+            if (v != null) controller.setVitaminsMode(v);
+          },
         ),
       ],
     );
@@ -210,19 +218,25 @@ class _ThemeStep extends ConsumerWidget {
           title: Text(strings.themeSystem),
           value: ThemeMode.system,
           groupValue: current,
-          onChanged: (v) => controller.setThemeMode(v!),
+          onChanged: (v) {
+            if (v != null) controller.setThemeMode(v);
+          },
         ),
         RadioListTile<ThemeMode>(
           title: Text(strings.themeLight),
           value: ThemeMode.light,
           groupValue: current,
-          onChanged: (v) => controller.setThemeMode(v!),
+          onChanged: (v) {
+            if (v != null) controller.setThemeMode(v);
+          },
         ),
         RadioListTile<ThemeMode>(
           title: Text(strings.themeDark),
           value: ThemeMode.dark,
           groupValue: current,
-          onChanged: (v) => controller.setThemeMode(v!),
+          onChanged: (v) {
+            if (v != null) controller.setThemeMode(v);
+          },
         ),
       ],
     );

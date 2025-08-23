@@ -8,19 +8,19 @@ class AppButtonStyles {
   static ButtonStyle primary(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return ButtonStyle(
-      minimumSize: MaterialStateProperty.all(const Size(64, 48)),
-      backgroundColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.disabled)) {
-          return scheme.onSurface.withOpacity(0.12);
+      minimumSize: WidgetStateProperty.all(const Size(64, 48)),
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return scheme.onSurface.withAlpha(31);
         }
-        if (states.contains(MaterialState.pressed)) {
-          return scheme.primary.withOpacity(0.8);
+        if (states.contains(WidgetState.pressed)) {
+          return scheme.primary.withAlpha(204);
         }
         return scheme.primary;
       }),
-      foregroundColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.disabled)) {
-          return scheme.onSurface.withOpacity(0.38);
+      foregroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return scheme.onSurface.withAlpha(97);
         }
         return scheme.onPrimary;
       }),
