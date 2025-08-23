@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_tracker/l10n/app_localizations.dart';
 
 import '../data/local/app_database.dart';
 import '../data/goal_repository.dart';

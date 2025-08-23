@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/local/app_database.dart';
 import '../data/product_repository.dart';
 import '../widgets/button_styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:food_tracker/l10n/app_localizations.dart';
 
 
 double _roundTo(double value, int places) {
