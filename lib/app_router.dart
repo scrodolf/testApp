@@ -100,7 +100,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     ],
     redirect: (context, state) {
       final done = prefs.getBool(kOnboardingCompleteKey) ?? false;
-      final inOnboarding = state.subloc == '/onboarding';
+      final inOnboarding = state.matchedLocation == '/onboarding';
       if (!done && !inOnboarding) return '/onboarding';
       if (done && inOnboarding) return '/logs';
       return null;
