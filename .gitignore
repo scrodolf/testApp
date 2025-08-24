@@ -1,7 +1,13 @@
-# Flutter/Dart
-.dart_tool/
-.build/
+# Node
+node_modules/
+npm-debug.log
+
+# Build outputs
 build/
+android/app/build/
+
+# Misc
+.dart_tool/
 flutter/
 .flutter-plugins
 .flutter-plugins-dependencies

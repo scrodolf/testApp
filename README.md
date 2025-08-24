@@ -1,62 +1,49 @@
-# Food App
+# Food Tracker React Native
 
-A foundational Flutter project showcasing the basic UI layout for a future food tracking application. It features a bottom navigation bar with screens for Logs, Meals, Products, Statistics, and an extended Settings area.
+This project rebuilds the original Flutter prototype into a React Native application.
 
 ## Prerequisites
-- Flutter SDK (version 3.x)
-- Android Studio or another Flutter-friendly IDE
-- Android SDK and platform tools
-- Java Development Kit (JDK)
+- Node.js ≥ 18
+- Android Studio and Android SDK
+- Java JDK 11+
+- Yarn or npm
 
-## Getting Started
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd testApp
-   ```
-2. **Install dependencies**
-   ```bash
-   flutter pub get
-   ```
-3. **Run the app** on an emulator or connected device
-   ```bash
-   flutter run
-   ```
+## Setup
+```bash
+npm install
+```
 
-## Features
-- Switch between Metric and Imperial display units.
-- Manage custom measurement units and convert between systems.
-- Edit the list of meal types (Breakfast, Lunch, Dinner by default).
-- Light/Dark/System theme toggle based on a seeded Material 3 color scheme.
-- Experimental placeholders for QR code scanning and JSON data export/import.
-- Optional detailed vitamin tracking mode.
-- Debug option to seed sample products, meals and logs.
-- Paste raw nutritional text and have products auto-filled.
-- Paste goal definitions and chart requests to auto-create goals or generate statistics visuals.
-=======
-- Manage custom measurement units and convert between metric and imperial systems.
-- Edit the list of meal types (Breakfast, Lunch, Dinner by default).
-- Light/Dark/System theme toggle.
-- Experimental placeholders for QR code scanning and JSON data export/import.
-- Optional detailed vitamin tracking mode.
+## Running
+```bash
+npx react-native start
+npx react-native run-android
+```
 
+## Building APK
+```bash
+cd android && ./gradlew assembleRelease
+```
 
-## Building
-- **Debug APK**
-  ```bash
-  flutter build apk --debug
-  ```
-- **Release APK**
-  ```bash
-  flutter build apk --release
-  ```
+## Testing
+```bash
+npm test
+```
 
-## Notes
-- Data export/import and QR scanning are stubbed. Enabling them stores a flag in SharedPreferences and opens a placeholder explaining the upcoming JSON backup format or QR-based product entry. QR scanning will request camera permission when opened.
-=======
-- When running for the first time, the database seeds base units (gram, milliliter, kilocalorie) and meal types.
-- If schema changes occur (e.g., after updating Drift tables), run `flutter pub run build_runner build` to regenerate database code.
+## Settings & Preferences
+The `Settings` screen demonstrates reactive preference editing. Values such as unit system, vitamins mode, and theme persist via `PreferencesManager` (AsyncStorage) and update the UI immediately through Redux state.
 
-## Troubleshooting
-- Ensure that the Android emulator or device meets the minimum SDK level (API 24).
-- If database migrations fail, delete the local `food_app.sqlite` in the app's documents directory and restart the app.
+## Architecture
+- `src/App.tsx` root component with React Navigation
+- `src/screens` feature screens
+- `src/services` data and integration layers
+- `src/services/database` SQLite schema, migrations, and seeders
+- `src/services/preferences` AsyncStorage-powered user preference manager
+- `src/store` Redux Toolkit store
+- `src/localization` i18next setup
+- `src/theme` theming utilities
+
+## Database
+SQLite is used for offline-first persistence. The schema and seed data live in `src/services/database`. Call `initDatabase()` during app startup to ensure tables and built-in rows exist.
+
+## Error Tracking
+Sentry is initialized in `src/services/errorTracking`. Configure the DSN via environment variables for production.
