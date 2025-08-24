@@ -29,11 +29,15 @@ cd android && ./gradlew assembleRelease
 npm test
 ```
 
+## Settings & Preferences
+The `Settings` screen demonstrates reactive preference editing. Values such as unit system, vitamins mode, and theme persist via `PreferencesManager` (AsyncStorage) and update the UI immediately through Redux state.
+
 ## Architecture
 - `src/App.tsx` root component with React Navigation
 - `src/screens` feature screens
 - `src/services` data and integration layers
 - `src/services/database` SQLite schema, migrations, and seeders
+- `src/services/preferences` AsyncStorage-powered user preference manager
 - `src/store` Redux Toolkit store
 - `src/localization` i18next setup
 - `src/theme` theming utilities

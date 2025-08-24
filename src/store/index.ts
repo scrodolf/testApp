@@ -1,5 +1,6 @@
 import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LogEntry } from '../services/repositories/LogRepository';
+import preferencesReducer from './preferencesSlice';
 
 const logsSlice = createSlice({
   name: 'logs',
@@ -16,6 +17,7 @@ export const { addLog } = logsSlice.actions;
 export const store = configureStore({
   reducer: {
     logs: logsSlice.reducer,
+    preferences: preferencesReducer,
   },
 });
 
