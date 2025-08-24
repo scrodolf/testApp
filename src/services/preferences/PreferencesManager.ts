@@ -11,6 +11,7 @@ const KEYS = {
   enableBarcode: 'pref_enableBarcode',
   enableExport: 'pref_enableExport',
   debugSampleData: 'pref_debugSampleData',
+  onboardingComplete: 'pref_onboardingComplete',
 };
 
 export interface Preferences {
@@ -20,6 +21,7 @@ export interface Preferences {
   enableBarcode: boolean;
   enableExport: boolean;
   debugSampleData: boolean;
+  onboardingComplete: boolean;
 }
 
 async function getBoolean(key: string, defaultValue = false): Promise<boolean> {
@@ -67,8 +69,14 @@ export const PreferencesManager = {
   async setDebugSampleData(value: boolean): Promise<void> {
     await AsyncStorage.setItem(KEYS.debugSampleData, String(value));
   },
+  async getOnboardingComplete(): Promise<boolean> {
+    return getBoolean(KEYS.onboardingComplete, false);
+  },
+  async setOnboardingComplete(value: boolean): Promise<void> {
+    await AsyncStorage.setItem(KEYS.onboardingComplete, String(value));
+  },
   async getAll(): Promise<Preferences> {
-    const [unitSystem, vitaminsMode, themeMode, enableBarcode, enableExport, debugSampleData] =
+    const [unitSystem, vitaminsMode, themeMode, enableBarcode, enableExport, debugSampleData, onboardingComplete] =
       await Promise.all([
         this.getUnitSystem(),
         this.getVitaminsMode(),
@@ -76,6 +84,7 @@ export const PreferencesManager = {
         this.getEnableBarcode(),
         this.getEnableExport(),
         this.getDebugSampleData(),
+        this.getOnboardingComplete(),
       ]);
     return {
       unitSystem,
@@ -84,6 +93,7 @@ export const PreferencesManager = {
       enableBarcode,
       enableExport,
       debugSampleData,
+      onboardingComplete,
     };
   },
 };

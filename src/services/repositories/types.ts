@@ -93,6 +93,9 @@ export interface ICategoryRepository {
 export interface IMealTypeRepository {
   getAll(): Promise<MealType[]>;
   getById(id: number): Promise<MealType | null>;
+  create(mealType: Omit<MealType, 'id' | 'isBuiltin'>): Promise<number>;
+  update(mealType: MealType): Promise<void>;
+  delete(id: number): Promise<void>;
 }
 
 export interface IProductRepository {

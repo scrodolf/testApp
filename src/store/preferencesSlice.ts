@@ -13,6 +13,7 @@ const initialState: Preferences = {
   enableBarcode: false,
   enableExport: false,
   debugSampleData: false,
+  onboardingComplete: false,
 };
 
 const preferencesSlice = createSlice({
@@ -37,6 +38,9 @@ const preferencesSlice = createSlice({
     setDebugSampleData(state, action: PayloadAction<boolean>) {
       state.debugSampleData = action.payload;
     },
+    setOnboardingComplete(state, action: PayloadAction<boolean>) {
+      state.onboardingComplete = action.payload;
+    },
     setAll(state, action: PayloadAction<Partial<Preferences>>) {
       Object.assign(state, action.payload);
     },
@@ -50,6 +54,7 @@ export const {
   setEnableBarcode,
   setEnableExport,
   setDebugSampleData,
+  setOnboardingComplete,
   setAll,
 } = preferencesSlice.actions;
 

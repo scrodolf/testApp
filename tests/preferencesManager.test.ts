@@ -16,4 +16,10 @@ describe('PreferencesManager', () => {
     const v = await PreferencesManager.getEnableBarcode();
     expect(v).toBe(true);
   });
+
+  it('handles onboarding flag', async () => {
+    await PreferencesManager.setOnboardingComplete(true);
+    const done = await PreferencesManager.getOnboardingComplete();
+    expect(done).toBe(true);
+  });
 });

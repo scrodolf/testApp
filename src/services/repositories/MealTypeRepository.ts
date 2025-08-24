@@ -27,5 +27,24 @@ export class MealTypeRepository implements IMealTypeRepository {
     if (res.rows.length === 0) return null;
     return mapMealType(res.rows.item(0));
   }
+
+  async create(mealType: Omit<MealType, 'id' | 'isBuiltin'>): Promise<number> {
+    const [res] = await this.db.executeSql(
+      'INSERT INTO meal_types (name_key, sort_order, is_builtin) VALUES (?, ?, 0)',
+      [mealType.nameKey, mealType.sortOrder],
+    );
+    return res.insertId ?? 0;
+  }
+
+  async update(mealType: MealType): Promise<void> {
+    await this.db.executeSql(
+      'UPDATE meal_types SET name_key = ?, sort_order = ?, is_builtin = ? WHERE id = ?',
+      [mealType.nameKey, mealType.sortOrder, mealType.isBuiltin ? 1 : 0, mealType.id],
+    );
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.db.executeSql('DELETE FROM meal_types WHERE id = ?', [id]);
+  }
 }
 
