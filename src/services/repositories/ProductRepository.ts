@@ -35,5 +35,16 @@ export class ProductRepository implements IProductRepository {
     );
     return res.insertId ?? 0;
   }
+
+  async update(product: Product): Promise<void> {
+    await this.db.executeSql(
+      'UPDATE products SET name = ?, default_unit_id = ?, default_size = ? WHERE id = ?',
+      [product.name, product.defaultUnitId ?? null, product.defaultSize ?? null, product.id]
+    );
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.db.executeSql('DELETE FROM products WHERE id = ?', [id]);
+  }
 }
 

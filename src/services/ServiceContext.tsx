@@ -4,8 +4,14 @@ import { initDatabase } from './database';
 import {
   UnitRepository,
   ProductUnitOverrideRepository,
+  ProductRepository,
+  CategoryRepository,
+  ProductCategoryValueRepository,
   IUnitRepository,
   IProductUnitOverrideRepository,
+  IProductRepository,
+  ICategoryRepository,
+  IProductCategoryValueRepository,
 } from './repositories';
 import { ConversionService } from './ConversionService';
 
@@ -13,10 +19,13 @@ interface Services {
   db: SQLiteDatabase;
   unitRepository: IUnitRepository;
   productUnitOverrideRepository: IProductUnitOverrideRepository;
+  productRepository: IProductRepository;
+  categoryRepository: ICategoryRepository;
+  productCategoryValueRepository: IProductCategoryValueRepository;
   conversionService: ConversionService;
 }
 
-const ServiceContext = createContext<Services | undefined>(undefined);
+export const ServiceContext = createContext<Services | undefined>(undefined);
 
 export const ServicesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [services, setServices] = useState<Services>();
@@ -26,8 +35,19 @@ export const ServicesProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const db = await initDatabase();
       const unitRepository = new UnitRepository(db);
       const productUnitOverrideRepository = new ProductUnitOverrideRepository(db);
+      const productRepository = new ProductRepository(db);
+      const categoryRepository = new CategoryRepository(db);
+      const productCategoryValueRepository = new ProductCategoryValueRepository(db);
       const conversionService = new ConversionService(unitRepository, productUnitOverrideRepository);
-      setServices({ db, unitRepository, productUnitOverrideRepository, conversionService });
+      setServices({
+        db,
+        unitRepository,
+        productUnitOverrideRepository,
+        productRepository,
+        categoryRepository,
+        productCategoryValueRepository,
+        conversionService,
+      });
     })();
   }, []);
 

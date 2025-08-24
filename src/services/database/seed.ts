@@ -82,7 +82,7 @@ export const VITAMIN_MODE_SAMPLE = {
 
 // Inserts seed data into the provided database. Uses INSERT OR IGNORE to avoid duplicating built-in rows.
 export async function seedInitialData(db: SQLiteDatabase): Promise<void> {
-  await db.transaction(tx => {
+  await db.transaction((tx: any) => {
     UNIT_SEED_DATA.forEach(u =>
       tx.executeSql(
         `INSERT OR IGNORE INTO units (id, name, symbol, dimension, factor_to_base, is_custom) VALUES (?, ?, ?, ?, ?, 0);`,

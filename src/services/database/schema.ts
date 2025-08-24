@@ -108,7 +108,7 @@ export const CREATE_INDEX_QUERIES: string[] = [
 
 // Helper that executes the schema definition against the provided database.
 export async function createSchema(db: SQLiteDatabase): Promise<void> {
-  await db.transaction(tx => {
+  await db.transaction((tx: any) => {
     CREATE_TABLE_QUERIES.forEach(query => tx.executeSql(query));
     CREATE_INDEX_QUERIES.forEach(query => tx.executeSql(query));
   });

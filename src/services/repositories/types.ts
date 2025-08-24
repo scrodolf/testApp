@@ -99,6 +99,8 @@ export interface IProductRepository {
   getAll(): Promise<Product[]>;
   getById(id: number): Promise<Product | null>;
   create(product: Omit<Product, 'id'>): Promise<number>;
+  update(product: Product): Promise<void>;
+  delete(id: number): Promise<void>;
 }
 
 export interface IProductCategoryValueRepository {
