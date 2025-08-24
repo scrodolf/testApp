@@ -33,9 +33,13 @@ npm test
 - `src/App.tsx` root component with React Navigation
 - `src/screens` feature screens
 - `src/services` data and integration layers
+- `src/services/database` SQLite schema, migrations, and seeders
 - `src/store` Redux Toolkit store
 - `src/localization` i18next setup
 - `src/theme` theming utilities
+
+## Database
+SQLite is used for offline-first persistence. The schema and seed data live in `src/services/database`. Call `initDatabase()` during app startup to ensure tables and built-in rows exist.
 
 ## Error Tracking
 Sentry is initialized in `src/services/errorTracking`. Configure the DSN via environment variables for production.
