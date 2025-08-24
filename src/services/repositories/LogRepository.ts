@@ -42,6 +42,18 @@ export class LogRepository implements ILogRepository {
     return items;
   }
 
+  async getInRange(start: string, end: string): Promise<LogEntry[]> {
+    const [res] = await this.db.executeSql(
+      'SELECT * FROM logs WHERE logged_at_local BETWEEN ? AND ? ORDER BY logged_at_local',
+      [start, end]
+    );
+    const items: LogEntry[] = [];
+    for (let i = 0; i < res.rows.length; i++) {
+      items.push(mapRow(res.rows.item(i)));
+    }
+    return items;
+  }
+
   async create(entry: Omit<LogEntry, 'id'>): Promise<number> {
     const [res] = await this.db.executeSql(
       'INSERT INTO logs (meal_id, logged_at_local, meal_type_id) VALUES (?, ?, ?)',

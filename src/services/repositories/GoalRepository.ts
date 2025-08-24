@@ -45,5 +45,24 @@ export class GoalRepository implements IGoalRepository {
     );
     return res.insertId ?? 0;
   }
+
+  async update(id: number, goal: Omit<Goal, 'id'>): Promise<void> {
+    await this.db.executeSql(
+      'UPDATE goals SET period = ?, category_id = ?, cap_value_in_base = ?, original_unit_id = ?, disposition = ?, impact = ? WHERE id = ?',
+      [
+        goal.period,
+        goal.categoryId,
+        goal.capValueInBase,
+        goal.originalUnitId ?? null,
+        goal.disposition,
+        goal.impact,
+        id,
+      ]
+    );
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.db.executeSql('DELETE FROM goals WHERE id = ?', [id]);
+  }
 }
 

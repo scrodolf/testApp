@@ -10,6 +10,8 @@ import ProductListScreen from './screens/ProductListScreen';
 import ProductEditorScreen from './screens/ProductEditorScreen';
 import MealBuilderScreen from './screens/MealBuilderScreen';
 import AddEditLogScreen from './screens/AddEditLogScreen';
+import StatisticsScreen from './screens/StatisticsScreen';
+import AddEditGoalScreen from './screens/AddEditGoalScreen';
 import { ServicesProvider } from './services/ServiceContext';
 import { PreferencesProvider } from './services/preferences/PreferencesProvider';
 
@@ -25,6 +27,8 @@ export default function App() {
               <Stack.Navigator>
                 <Stack.Screen name="Logs" component={LogsScreen} />
                 <Stack.Screen name="AddEditLog" component={AddEditLogScreen} options={{ presentation: 'modal', title: 'Log' }} />
+                <Stack.Screen name="Statistics" component={StatisticsScreen} />
+                <Stack.Screen name="AddEditGoal" component={AddEditGoalScreen} options={{ presentation: 'modal', title: 'Goal' }} />
                 <Stack.Screen name="Products" component={ProductListScreen} />
                 <Stack.Screen name="ProductEditor" component={ProductEditorScreen} options={{ title: 'Product' }} />
                 <Stack.Screen name="MealBuilder" component={MealBuilderScreen} options={{ title: 'Meal Builder' }} />

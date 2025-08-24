@@ -10,6 +10,9 @@ import {
   MealRepository,
   MealTypeRepository,
   LogRepository,
+  GoalRepository,
+  MealItemRepository,
+  MealCustomEntryRepository,
   IUnitRepository,
   IProductUnitOverrideRepository,
   IProductRepository,
@@ -18,8 +21,12 @@ import {
   IMealRepository,
   IMealTypeRepository,
   ILogRepository,
+  IGoalRepository,
+  IMealItemRepository,
+  IMealCustomEntryRepository,
 } from './repositories';
 import { ConversionService } from './ConversionService';
+import { StatsService } from './StatsService';
 
 interface Services {
   db: SQLiteDatabase;
@@ -31,7 +38,11 @@ interface Services {
   mealRepository: IMealRepository;
   mealTypeRepository: IMealTypeRepository;
   logRepository: ILogRepository;
+  goalRepository: IGoalRepository;
+  mealItemRepository: IMealItemRepository;
+  mealCustomEntryRepository: IMealCustomEntryRepository;
   conversionService: ConversionService;
+  statsService: StatsService;
 }
 
 export const ServiceContext = createContext<Services | undefined>(undefined);
@@ -50,7 +61,17 @@ export const ServicesProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const mealRepository = new MealRepository(db);
       const mealTypeRepository = new MealTypeRepository(db);
       const logRepository = new LogRepository(db);
+      const goalRepository = new GoalRepository(db);
+      const mealItemRepository = new MealItemRepository(db);
+      const mealCustomEntryRepository = new MealCustomEntryRepository(db);
       const conversionService = new ConversionService(unitRepository, productUnitOverrideRepository);
+      const statsService = new StatsService(
+        logRepository,
+        mealItemRepository,
+        mealCustomEntryRepository,
+        productCategoryValueRepository,
+        conversionService
+      );
       setServices({
         db,
         unitRepository,
@@ -61,7 +82,11 @@ export const ServicesProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         mealRepository,
         mealTypeRepository,
         logRepository,
+        goalRepository,
+        mealItemRepository,
+        mealCustomEntryRepository,
         conversionService,
+        statsService,
       });
     })();
   }, []);

@@ -133,6 +133,7 @@ export interface ILogRepository {
   getAll(): Promise<LogEntry[]>;
   getById(id: number): Promise<LogEntry | null>;
   getByDate(date: string): Promise<LogEntry[]>;
+  getInRange(start: string, end: string): Promise<LogEntry[]>;
   create(entry: Omit<LogEntry, 'id'>): Promise<number>;
   update(id: number, entry: Omit<LogEntry, 'id'>): Promise<void>;
   delete(id: number): Promise<void>;
@@ -142,5 +143,7 @@ export interface IGoalRepository {
   getAll(): Promise<Goal[]>;
   getById(id: number): Promise<Goal | null>;
   create(goal: Omit<Goal, 'id'>): Promise<number>;
+  update(id: number, goal: Omit<Goal, 'id'>): Promise<void>;
+  delete(id: number): Promise<void>;
 }
 
