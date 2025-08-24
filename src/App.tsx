@@ -7,6 +7,7 @@ import LogsScreen from './screens/LogsScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductEditorScreen from './screens/ProductEditorScreen';
+import MealBuilderScreen from './screens/MealBuilderScreen';
 import { ServicesProvider } from './services/ServiceContext';
 import { PreferencesProvider } from './services/preferences/PreferencesProvider';
 
@@ -22,6 +23,7 @@ export default function App() {
               <Stack.Screen name="Logs" component={LogsScreen} />
               <Stack.Screen name="Products" component={ProductListScreen} />
               <Stack.Screen name="ProductEditor" component={ProductEditorScreen} options={{ title: 'Product' }} />
+              <Stack.Screen name="MealBuilder" component={MealBuilderScreen} options={{ title: 'Meal Builder' }} />
               <Stack.Screen name="Settings" component={SettingsScreen} />
             </Stack.Navigator>
           </NavigationContainer>
