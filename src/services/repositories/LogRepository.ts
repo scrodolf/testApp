@@ -28,12 +28,37 @@ export class LogRepository implements ILogRepository {
     return mapRow(res.rows.item(0));
   }
 
+  async getByDate(date: string): Promise<LogEntry[]> {
+    const start = `${date}T00:00:00`;
+    const end = `${date}T23:59:59.999`;
+    const [res] = await this.db.executeSql(
+      'SELECT * FROM logs WHERE logged_at_local BETWEEN ? AND ? ORDER BY logged_at_local',
+      [start, end]
+    );
+    const items: LogEntry[] = [];
+    for (let i = 0; i < res.rows.length; i++) {
+      items.push(mapRow(res.rows.item(i)));
+    }
+    return items;
+  }
+
   async create(entry: Omit<LogEntry, 'id'>): Promise<number> {
     const [res] = await this.db.executeSql(
       'INSERT INTO logs (meal_id, logged_at_local, meal_type_id) VALUES (?, ?, ?)',
       [entry.mealId, entry.loggedAtLocal, entry.mealTypeId ?? null]
     );
     return res.insertId ?? 0;
+  }
+
+  async update(id: number, entry: Omit<LogEntry, 'id'>): Promise<void> {
+    await this.db.executeSql(
+      'UPDATE logs SET meal_id = ?, logged_at_local = ?, meal_type_id = ? WHERE id = ?',
+      [entry.mealId, entry.loggedAtLocal, entry.mealTypeId ?? null, id]
+    );
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.db.executeSql('DELETE FROM logs WHERE id = ?', [id]);
   }
 }
 

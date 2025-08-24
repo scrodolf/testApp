@@ -7,11 +7,17 @@ import {
   ProductRepository,
   CategoryRepository,
   ProductCategoryValueRepository,
+  MealRepository,
+  MealTypeRepository,
+  LogRepository,
   IUnitRepository,
   IProductUnitOverrideRepository,
   IProductRepository,
   ICategoryRepository,
   IProductCategoryValueRepository,
+  IMealRepository,
+  IMealTypeRepository,
+  ILogRepository,
 } from './repositories';
 import { ConversionService } from './ConversionService';
 
@@ -22,6 +28,9 @@ interface Services {
   productRepository: IProductRepository;
   categoryRepository: ICategoryRepository;
   productCategoryValueRepository: IProductCategoryValueRepository;
+  mealRepository: IMealRepository;
+  mealTypeRepository: IMealTypeRepository;
+  logRepository: ILogRepository;
   conversionService: ConversionService;
 }
 
@@ -38,6 +47,9 @@ export const ServicesProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const productRepository = new ProductRepository(db);
       const categoryRepository = new CategoryRepository(db);
       const productCategoryValueRepository = new ProductCategoryValueRepository(db);
+      const mealRepository = new MealRepository(db);
+      const mealTypeRepository = new MealTypeRepository(db);
+      const logRepository = new LogRepository(db);
       const conversionService = new ConversionService(unitRepository, productUnitOverrideRepository);
       setServices({
         db,
@@ -46,6 +58,9 @@ export const ServicesProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         productRepository,
         categoryRepository,
         productCategoryValueRepository,
+        mealRepository,
+        mealTypeRepository,
+        logRepository,
         conversionService,
       });
     })();

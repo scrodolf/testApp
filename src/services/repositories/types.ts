@@ -132,7 +132,10 @@ export interface IMealCustomEntryRepository {
 export interface ILogRepository {
   getAll(): Promise<LogEntry[]>;
   getById(id: number): Promise<LogEntry | null>;
+  getByDate(date: string): Promise<LogEntry[]>;
   create(entry: Omit<LogEntry, 'id'>): Promise<number>;
+  update(id: number, entry: Omit<LogEntry, 'id'>): Promise<void>;
+  delete(id: number): Promise<void>;
 }
 
 export interface IGoalRepository {

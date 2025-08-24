@@ -1,5 +1,8 @@
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
+  preset: 'react-native',
+  transform: {
+    '^.+\\.(js|jsx)$': 'babel-jest',
+    '^.+\\.(ts|tsx)$': 'ts-jest',
+  },
   roots: ['<rootDir>/tests'],
 };
